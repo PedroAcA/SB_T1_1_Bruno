@@ -38,6 +38,6 @@ char* le_linha(FILE * arq){
         linha[i] = c;
         linha = (char*) realloc(linha,(i+2)*sizeof(char));
     }
-        linha[i] = '\n';
+        linha[i] = '\0';
         return linha;
 }

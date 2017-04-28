@@ -8,11 +8,11 @@ int main(){
     if(existe_arquivo(arq)){
         while(!feof(arq)){
             linha = proxima_linha(arq);
-            printf("Linha lida:\n\t%s\n",linha);
+            printf("Linha lida:\n\t%s \n",linha);
             token = divide_tokens(linha);
             printf("Tokens:\n");
             while(token!=NULL){
-                printf("\t%s\n",token);
+                printf("\t%s \n",token);
                 token = prox_token();
             }
             free(linha);
@@ -21,4 +21,5 @@ int main(){
     }else{
         printf("Arquivo %s n%co encontrado!","teste1.pre",198);
     }
+    return 0;
 }
