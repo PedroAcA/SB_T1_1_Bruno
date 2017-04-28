@@ -21,28 +21,41 @@
 1493394265 source:/home/paca/SB_T1_1_Bruno/Montador/scanner.c
 	"bibliotecas_montador.h"
 
-1493388385 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\arquivos.c
+1493400172 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\arquivos.c
 	"bibliotecas_montador.h"
 
-1493388385 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\bibliotecas_montador.h
+1493402518 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\bibliotecas_montador.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
+	<ctype.h>
 	"scanner.h"
 	"arquivos.h"
+	"pre_processador.h"
+	"tabelas.h"
 
-1493388385 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\scanner.h
+1493400172 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\scanner.h
 
-1493388385 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\arquivos.h
+1493400172 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\arquivos.h
 
-1493388385 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\montador.c
+1493400833 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\montador.c
 	"bibliotecas_montador.h"
 
-1493388385 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\scanner.c
+1493400172 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\scanner.c
 	"bibliotecas_montador.h"
 
 1493391898 /home/paca/SB_T1_1_Bruno/Montador/pre_processador.h
 
 1493393104 source:/home/paca/SB_T1_1_Bruno/Montador/pre_processador.c
+	"bibliotecas_montador.h"
+
+1493402441 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\pre_processador.h
+
+1493402507 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\pre_processador.c
+	"bibliotecas_montador.h"
+
+1493402500 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\tabelas.h
+
+1493402500 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\tabelas.c
 	"bibliotecas_montador.h"
 

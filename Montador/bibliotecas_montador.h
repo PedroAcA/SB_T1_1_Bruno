@@ -9,3 +9,4 @@
 #include"scanner.h"
 #include"arquivos.h"
 #include"pre_processador.h"
+#include"tabelas.h"

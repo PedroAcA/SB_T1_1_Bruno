@@ -1,3 +1,7 @@
+l1: equ 1
+
+
+section text
 
 load a
 copy a 
