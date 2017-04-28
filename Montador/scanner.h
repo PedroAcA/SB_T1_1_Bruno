@@ -5,3 +5,4 @@ char *prox_token();
 int tam_string(char *);
 int tem_char(char *,char);
 char* divide_tokens(char *);
+char* le_linha(FILE *);

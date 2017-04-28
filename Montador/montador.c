@@ -2,21 +2,23 @@
 int main(){
     char* nome_arq ={"teste1.asm"};
     FILE* arq;
-    char* linha,token;
-    arq = fopen(nome_arq,"r");
+    char *linha,*token;
+    pre_processa(nome_arq);
+    arq = fopen("teste1.pre","r");
     if(existe_arquivo(arq)){
-        /*while(!feof(arq)){
+        while(!feof(arq)){
             linha = proxima_linha(arq);
-            printf("Linha lida:\n\t %s\n",linha);
+            printf("Linha lida:\n\t%s\n",linha);
             token = divide_tokens(linha);
             printf("Tokens:\n");
             while(token!=NULL){
                 printf("\t%s\n",token);
                 token = prox_token();
             }
-        }*/
-        preprocessamento(arq);
+            free(linha);
+        }
+        fclose(arq);
     }else{
-        printf("Arquivo %s n%co encontrado!",nome_arq,198);
+        printf("Arquivo %s n%co encontrado!","teste1.pre",198);
     }
 }

@@ -39,6 +39,9 @@
 		<Unit filename="montador.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="pre_processador.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="scanner.c">
 			<Option compilerVar="CC" />
 		</Unit>

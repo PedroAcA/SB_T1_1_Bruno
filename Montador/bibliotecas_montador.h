@@ -5,5 +5,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<ctype.h>
 #include"scanner.h"
 #include"arquivos.h"
+#include"pre_processador.h"

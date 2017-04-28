@@ -1,44 +1,12 @@
 #include"bibliotecas_montador.h"
-
-void preprocessamento (FILE * arq){
-    FILE *pre = fopen("teste1.pre","w") ;
-    char c;
-
-    while((c = fgetc(arq)) != EOF){
-        if (c!= ';'){
-            c = tolower(c);
-            fprintf(pre,"%c",c);
-        }
-        else{
-            while (fgetc(arq) != '\n' );
-            fprintf(pre,"\n");
-        }
-    }
-    fclose(pre);
-}
-
 char * proxima_linha(FILE * arq){//assume que o arquivo ja esta aberto
-    char *palavra,copia;
-    char caracter;
-    int tam_palavra,i;
-    if(!feof(arq)){
-        fscanf(arq,"%s",&palavra);
-    }
-    tam_palavra = tam_string(palavra);
-    copia = palavra;
-    palavra = (char *)malloc(tam_palavra*sizeof(char));
-    strcpy(palavra,copia);
-    for(i=0;i<tam_palavra;i++){
-        caracter= tolower(palavra[i]);
-        palavra[i] = caracter;
-    }
+    char *palavra;
+    palavra = le_linha(arq);
     return palavra;
 }
+/*funcao divide_tokens espera que o arquivo ja tenha sido pre-processado
+e que os comentarios tenham sido retirados*/
 char* divide_tokens(char *linha){
-    if(tem_char(linha,';')){// procura primeiro por caracteres de comentarios
-        linha = strtok(linha,";");// exclui as linhas de comentarios
-      //  linha[tam_string(linha) -1] = '\0';
-    }
     return strtok(linha," ");//subvide a string em tokens
 
 }
@@ -57,4 +25,19 @@ int tam_string(char* str){
 }
 int tem_char(char *palavra,char caract){
     return (strchr(palavra,caract)!=NULL);
+}
+char* le_linha(FILE * arq){
+    int i;
+    char c = fgetc(arq);
+    char* linha = (char*)calloc(1,sizeof(char));
+    /*laco percorre cada posicao da string linha (de i =0  incrementando i++)
+    e a cada iteracao le o proximo caracter do arquivo. Se esse carater for
+    o fim do arquivo ou '\n' entao encerra o laco. A cada itercao, salva o
+    caracter na string e aloca espaco para receber o proximo caracter*/
+    for(i=0;(c!=EOF && c!='\n');i++,c=fgetc(arq) ){
+        linha[i] = c;
+        linha = (char*) realloc(linha,(i+2)*sizeof(char));
+    }
+        linha[i] = '\n';
+        return linha;
 }
