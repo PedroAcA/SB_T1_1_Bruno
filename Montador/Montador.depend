@@ -19,3 +19,23 @@
 1493387289 source:/home/paca/SB_T1_1_Bruno/Montador/scanner.c
 	"bibliotecas_montador.h"
 
+1493388385 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\arquivos.c
+	"bibliotecas_montador.h"
+
+1493388385 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\bibliotecas_montador.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"scanner.h"
+	"arquivos.h"
+
+1493388385 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\scanner.h
+
+1493388385 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\arquivos.h
+
+1493388385 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\montador.c
+	"bibliotecas_montador.h"
+
+1493388385 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\scanner.c
+	"bibliotecas_montador.h"
+

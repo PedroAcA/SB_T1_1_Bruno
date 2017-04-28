@@ -1,4 +1,22 @@
 #include"bibliotecas_montador.h"
+
+void preprocessamento (FILE * arq){
+    FILE *pre = fopen("teste1.pre","w") ;
+    char c;
+
+    while((c = fgetc(arq)) != EOF){
+        if (c!= ';'){
+            c = tolower(c);
+            fprintf(pre,"%c",c);
+        }
+        else{
+            while (fgetc(arq) != '\n' );
+            fprintf(pre,"\n");
+        }
+    }
+    fclose(pre);
+}
+
 char * proxima_linha(FILE * arq){//assume que o arquivo ja esta aberto
     char *palavra,copia;
     char caracter;

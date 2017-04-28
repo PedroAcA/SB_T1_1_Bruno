@@ -5,7 +5,7 @@ int main(){
     char* linha,token;
     arq = fopen(nome_arq,"r");
     if(existe_arquivo(arq)){
-        while(!feof(arq)){
+        /*while(!feof(arq)){
             linha = proxima_linha(arq);
             printf("Linha lida:\n\t %s\n",linha);
             token = divide_tokens(linha);
@@ -14,7 +14,8 @@ int main(){
                 printf("\t%s\n",token);
                 token = prox_token();
             }
-        }
+        }*/
+        preprocessamento(arq);
     }else{
         printf("Arquivo %s n%co encontrado!",nome_arq,198);
     }
