@@ -39,6 +39,10 @@
 		<Unit filename="montador.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="parser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="parser.h" />
 		<Unit filename="pre_processador.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -47,6 +51,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="scanner.h" />
+		<Unit filename="tabelas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tabelas.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

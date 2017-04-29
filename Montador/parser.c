@@ -1,6 +1,6 @@
 #include"bibliotecas_montador.h"
-#define FALSE 0
-#define TRUE !(FALSE)
+//#define FALSE 0
+//#define TRUE !(FALSE)
 void verifica_linhas(FILE* arq){
     int contador_posicao=0,contador_linha=1;
     int continua_busca_token;
