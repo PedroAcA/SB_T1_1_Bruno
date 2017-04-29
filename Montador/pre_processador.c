@@ -36,7 +36,7 @@ void pre_processa(char *nome_arq){
     if(existe_arquivo(arq)){
         while(!feof(arq)){
         fgets(linha,100,arq);
-        //printf("linha lida: %s",linha);
+        printf("linha lida: %s",linha);
 
         if(strcmp(linha,"section text\n") ==0)
             break;
@@ -52,11 +52,11 @@ void pre_processa(char *nome_arq){
         printf("Arquivo %s n%co encontrado!","teste1.pre",198);
     }
 
-    //printf("lista de equivalencias\n");
-    //TabelaEQU * p;
-    //for (p=tabela;p!=NULL; p= p->prox){
-      //  printf("Nome: %s\n", p->nome);
-    //}
+    printf("lista de equivalencias\n");
+    TabelaEQU * p;
+    for (p=tabela;p!=NULL; p= p->prox){
+        printf("Nome: %s\n", p->nome);
+    }
 
 
 }
@@ -81,5 +81,13 @@ void limpa(char* linha, int n){
     for (i=0;i<n;i++){
         linha[i] = '\0';
     }
+}
+
+TabelaEQU* InsereEquivalencia (TabelaEQU* tabela, char nome[] ){
+    TabelaEQU * novo = (TabelaEQU*) malloc(sizeof(TabelaEQU));
+    strcpy(novo->nome, nome);
+    novo->prox = tabela;
+    tabela = novo;
+    return tabela;
 }
 

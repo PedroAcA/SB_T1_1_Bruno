@@ -5,7 +5,7 @@ int main(){
     char *linha,*token;
     pre_processa(nome_arq);
     arq = fopen("teste1.pre","r");
-    if(existe_arquivo(arq)){
+    /*if(existe_arquivo(arq)){
         while(!feof(arq)){
             linha = proxima_linha(arq);
             printf("Linha lida:\n\t%s \n",linha);
@@ -20,6 +20,6 @@ int main(){
         fclose(arq);
     }else{
         printf("Arquivo %s n%co encontrado!","teste1.pre",198);
-    }
+    }*/
     return 0;
 }
