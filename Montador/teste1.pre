@@ -1,5 +1,5 @@
 l1: equ 1
-
+l2: equ 1
 
 section text
 

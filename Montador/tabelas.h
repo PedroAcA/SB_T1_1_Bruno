@@ -18,5 +18,8 @@ typedef struct diretivas{
     struct diretivas *prox;
 } TabelaDeDiretivas;
 
+
+
 void* CriaTabela (void);
 TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos*, char*, int);
+TabelaEQU* InsereEquivalencia (TabelaEQU*, char*);
