@@ -11,3 +11,5 @@ void pre_processa(char *);
 int EhEQU (char *, char[]);
 void limpa(char* , int);
 void lista_equivalencias (FILE*, TabelaEQU*);
+void resolve_equivalencias(FILE*, TabelaEQU*);
+int TaNaLista(char[], TabelaEQU*);

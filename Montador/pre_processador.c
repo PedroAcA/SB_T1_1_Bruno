@@ -41,23 +41,29 @@ void pre_processa(char *nome_arq){
         if(strcmp(linha,"section text\n") ==0)
             break;
 
-        if (EhEQU(linha, token)){
+        if (EhEQU(linha, token)  == 1){
             tabela = InsereEquivalencia(tabela,token);
         }
         limpa(linha,100);
         limpa(token,50);
     }
-        fclose(arq);
+        
     }else{
         printf("Arquivo %s n%co encontrado!","teste1.pre",198);
     }
 
+    if(feof(arq))
+        printf("SECTION TEXT FALTANTE\n");
     //printf("lista de equivalencias\n");
     //TabelaEQU * p;
     //for (p=tabela;p!=NULL; p= p->prox){
     //    printf("Nome: %s\n", p->nome);
     //}
+    rewind(arq);
 
+    resolve_equivalencias(arq, tabela);
+
+    fclose(arq);
 
 }
 
@@ -89,5 +95,59 @@ TabelaEQU* InsereEquivalencia (TabelaEQU* tabela, char nome[] ){
     novo->prox = tabela;
     tabela = novo;
     return tabela;
+}
+
+int TaNaLista(char linha[], TabelaEQU* lista){
+    int i;
+    char token[50];
+    TabelaEQU* p = lista;
+
+    for(i=3;linha[i]!='\n';i++){
+        token[i-3] = linha[i];
+    }
+    token[i-3] = '\0';
+
+    while( (p!= NULL) && (strcmp(p->nome,token) != 0)){
+        p= p->prox;
+    }
+
+    if(p==NULL)
+        return 0;
+    else
+        return 1;
+}
+
+void resolve_equivalencias(FILE* arq, TabelaEQU* lista){
+    FILE* arq2 = fopen("teste2.pre","w");
+    char linha[100],token[50];
+
+    while(!feof(arq)){
+        fgets(linha,100,arq);
+        printf("linha lida: %s",linha);
+
+        if (EhEQU(linha,token) != 0){
+            fprintf(arq2,"\n");
+        }
+        else if (linha[0] == 'i' && linha [1] == 'f'){
+            if(TaNaLista(linha,lista)){
+                fprintf(arq2,"\n");
+                fgets(linha,100,arq);
+                fprintf(arq2,"%s",linha);
+            }
+            else{
+                fprintf(arq2,"\n");
+                fgets(linha,100,arq);
+                fprintf(arq2,"\n");
+            }
+        }
+        else
+            fprintf(arq2,"%s",linha);
+
+        limpa(linha,100);
+        limpa(token,50);
+
+    }
+
+    fclose(arq2);
 }
 
