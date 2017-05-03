@@ -1,6 +1,6 @@
 #include"bibliotecas_montador.h"
 void remove_desnecessarios (FILE * arq){
-    FILE *pre = fopen("teste1.pre","w") ;
+    FILE *pre = fopen("temp.pre","w") ;
     char c, anterior = 'a';
 
     while((c = fgetc(arq)) != EOF){
@@ -29,7 +29,7 @@ void pre_processa(char *nome_arq){
         printf("Arquivo %s n%co encontrado!",nome_arq,198);
     }
 
-    arq = fopen("teste1.pre","r");
+    arq = fopen("temp.pre","r");
 
     TabelaEQU * tabela = NULL;
 
@@ -49,7 +49,7 @@ void pre_processa(char *nome_arq){
     }
         
     }else{
-        printf("Arquivo %s n%co encontrado!","teste1.pre",198);
+        printf("Arquivo %s n%co encontrado!","temp.pre",198);
     }
 
     if(feof(arq))
@@ -64,6 +64,8 @@ void pre_processa(char *nome_arq){
     resolve_equivalencias(arq, tabela);
 
     fclose(arq);
+
+    remove("temp.pre")
 
 }
 
@@ -118,7 +120,7 @@ int TaNaLista(char linha[], TabelaEQU* lista){
 }
 
 void resolve_equivalencias(FILE* arq, TabelaEQU* lista){
-    FILE* arq2 = fopen("teste2.pre","w");
+    FILE* arq2 = fopen("teste1.pre","w");
     char linha[100],token[50];
 
     while(!feof(arq)){
