@@ -21,6 +21,7 @@ void remove_desnecessarios (FILE * arq){
 void pre_processa(char *nome_arq){
      char linha[150], token[50];
      FILE* arq;
+     char* retorno_fgets;
        arq = fopen(nome_arq,"r");
     if(existe_arquivo(arq)){
         remove_desnecessarios(arq);
@@ -35,7 +36,7 @@ void pre_processa(char *nome_arq){
 
     if(existe_arquivo(arq)){
         while(!feof(arq)){
-        fgets(linha,100,arq);
+       retorno_fgets= fgets(linha,100,arq);
        // printf("linha lida: %s",linha);
 
         if(strcmp(linha,"section text\n") ==0)
@@ -47,7 +48,7 @@ void pre_processa(char *nome_arq){
         limpa(linha,100);
         limpa(token,50);
     }
-        
+
     }else{
         printf("Arquivo %s n%co encontrado!","temp.pre",198);
     }
@@ -65,7 +66,7 @@ void pre_processa(char *nome_arq){
 
     fclose(arq);
 
-    remove("temp.pre")
+    remove("temp.pre");
 
 }
 
@@ -122,23 +123,24 @@ int TaNaLista(char linha[], TabelaEQU* lista){
 void resolve_equivalencias(FILE* arq, TabelaEQU* lista){
     FILE* arq2 = fopen("teste1.pre","w");
     char linha[100],token[50];
-
+    char* retorno_fgets; // usado para remover os warnings e lidar com possiveis
+                        // erros gerados pela fgets, caso necessario
     while(!feof(arq)){
-        fgets(linha,100,arq);
-        printf("linha lida: %s",linha);
+        retorno_fgets=fgets(linha,100,arq);
+       // printf("linha lida: %s",linha);
 
         if (EhEQU(linha,token) != 0){
             fprintf(arq2,"\n");
         }
         else if (linha[0] == 'i' && linha [1] == 'f'){
             if(TaNaLista(linha,lista)){
-                fprintf(arq2,"\n");
-                fgets(linha,100,arq);
+               fprintf(arq2,"\n");
+               retorno_fgets= fgets(linha,100,arq);
                 fprintf(arq2,"%s",linha);
             }
             else{
                 fprintf(arq2,"\n");
-                fgets(linha,100,arq);
+               retorno_fgets= fgets(linha,100,arq);
                 fprintf(arq2,"\n");
             }
         }

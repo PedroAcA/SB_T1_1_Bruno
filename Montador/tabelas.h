@@ -23,3 +23,4 @@ typedef struct diretivas{
 void* CriaTabela (void);
 TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos*, char*, int);
 TabelaEQU* InsereEquivalencia (TabelaEQU*, char*);
+int existe_simbolo(TabelaDeSimbolos*,char*);

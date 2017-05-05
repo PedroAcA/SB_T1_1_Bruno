@@ -18,10 +18,7 @@ char* prox_token(){
 
 /*tam_string retorna o numero de elementos em uma string*/
 int tam_string(char* str){
-    /*A funcao sizeof() retorna o numero de bytes que um vetor ou variavel
-    ocupa na memoria. Se esse numero for dividido pelo numero de bytes que
-    um caracter ocupa na memoria, entao teremos o total de elementos da string*/
-    return (sizeof(str)/sizeof(char) );
+    return strlen(str);
 }
 int tem_char(char *palavra,char caract){
     return (strchr(palavra,caract)!=NULL);

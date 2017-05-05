@@ -10,3 +10,4 @@
 #include"pre_processador.h"
 #include"tabelas.h"
 #include"parser.h"
+int passagem;

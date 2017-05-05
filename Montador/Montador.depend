@@ -2,7 +2,7 @@
 1493384410 source:/home/paca/SB_T1_1_Bruno/Montador/arquivos.c
 	"bibliotecas_montador.h"
 
-1493429928 /home/paca/SB_T1_1_Bruno/Montador/bibliotecas_montador.h
+1493950950 /home/paca/SB_T1_1_Bruno/Montador/bibliotecas_montador.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -17,10 +17,10 @@
 
 1493384370 /home/paca/SB_T1_1_Bruno/Montador/arquivos.h
 
-1493429376 source:/home/paca/SB_T1_1_Bruno/Montador/montador.c
+1493950983 source:/home/paca/SB_T1_1_Bruno/Montador/montador.c
 	"bibliotecas_montador.h"
 
-1493400018 source:/home/paca/SB_T1_1_Bruno/Montador/scanner.c
+1493943585 source:/home/paca/SB_T1_1_Bruno/Montador/scanner.c
 	"bibliotecas_montador.h"
 
 1493428349 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\arquivos.c
@@ -46,9 +46,9 @@
 1493428350 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\scanner.c
 	"bibliotecas_montador.h"
 
-1493428885 /home/paca/SB_T1_1_Bruno/Montador/pre_processador.h
+1493939480 /home/paca/SB_T1_1_Bruno/Montador/pre_processador.h
 
-1493429623 source:/home/paca/SB_T1_1_Bruno/Montador/pre_processador.c
+1493951333 source:/home/paca/SB_T1_1_Bruno/Montador/pre_processador.c
 	"bibliotecas_montador.h"
 
 1493428350 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\pre_processador.h
@@ -61,7 +61,13 @@
 1493428350 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\tabelas.c
 	"bibliotecas_montador.h"
 
-1493428885 /home/paca/SB_T1_1_Bruno/Montador/tabelas.h
+1493947389 /home/paca/SB_T1_1_Bruno/Montador/tabelas.h
 
-1493416243 /home/paca/SB_T1_1_Bruno/Montador/parser.h
+1493948843 /home/paca/SB_T1_1_Bruno/Montador/parser.h
+
+1493948018 source:/home/paca/SB_T1_1_Bruno/Montador/tabelas.c
+	"bibliotecas_montador.h"
+
+1493952085 source:/home/paca/SB_T1_1_Bruno/Montador/parser.c
+	"bibliotecas_montador.h"
 

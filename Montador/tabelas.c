@@ -12,3 +12,12 @@ TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos* tabela, char nome[], int valo
     tabela = novo;
     return tabela;
 }
+int existe_simbolo(TabelaDeSimbolos* tabela,char* simb){
+    while(tabela!=NULL){
+        if(strcmp(tabela->nome,simb)==0){//achou simbolo na tabela de simbolos
+            return TRUE;
+        }
+        tabela = tabela->prox;
+    }
+    return FALSE;
+}
