@@ -11,3 +11,4 @@
 #include"tabelas.h"
 #include"parser.h"
 int passagem;
+TabelaDeInstrucoes* Instrucoes;

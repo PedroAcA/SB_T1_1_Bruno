@@ -15,16 +15,16 @@ void verifica_linhas(FILE* arq,TabelaDeSimbolos** TS){
     while(!feof(arq)){
         linha = proxima_linha(arq);
       //  printf("\nLinha lida %s\n",linha);
-      //  printf("\nContador linha: %d\n",contador_linha);
+        printf("\nContador linha: %d\n",contador_linha);
         token = divide_tokens(linha);
         //printf("\nToken lido %s\n",token);
         continua_busca_token = classifica(token,TS);
-      //  printf("\nContador posicao: %d\n",contador_posicao);
+        printf("\nContador posicao: %d\n",contador_posicao);
         while(token!=NULL && continua_busca_token){
             token = prox_token();
          //   printf("\nToken lido %s\n",token);
             continua_busca_token =classifica(token,TS);
-      //      printf("\nContador posicao: %d\n",contador_posicao);
+            printf("\nContador posicao: %d\n",contador_posicao);
         }
         rotulos_linha = 0;
         contador_linha++;
@@ -68,7 +68,28 @@ int existe_rotulo(char * tok){
 int eh_numero(char c){
     return (c>='0' && c<='9');
 }
+void busca_primeira_passagem(char* tok,TabelaDeSimbolos** TS){
+    rotulos_linha++;// o montador so precisa verificar se ha mais de um simbolo
+                    // por linha na primeira passagem. Se houver, um erro
+                    // eh registrado e a segunda passagem nao ocorre.
+    if(rotulos_linha<2){
+        tok[tam_string(tok)-1] = '\0';// tira os 2 pontos do token que eh rotulo
+        if(!existe_simbolo(*TS,tok)){
+            *TS = InsereSimbolo(*TS,tok,contador_posicao);
+        }else{
+            printf("\nSimbolo %s redefinido na linha %d\n",tok,contador_linha);
+        }
+    }else{
+        printf("\nHa mais de um rotulo na linha %d\n",contador_linha);
+    }
+}
+
 int existe_instrucao(char *tok){
+    if(incrementa_posicao(tok)){//OBS: adicionar funcionalidades de segunda passagem depois
+        return TRUE;
+    }
+    return FALSE;
+/*
     if(strcmp(tok,"add")==0){
         contador_posicao+= 2;
         return TRUE;
@@ -112,23 +133,23 @@ int existe_instrucao(char *tok){
         contador_posicao+=1;
         return TRUE;
     }
+    */
+    return FALSE;
+}
+/*A funcao incrementa_posicao busca se a instrucao eh valida e, se for,
+  atualiza o contador_posicao. Retorna TRUE(definido em pre_processador.h)
+  se instrucao for valida ou FALSE (definido em pre_processador.h) caso
+  contrario*/
+int incrementa_posicao(char*tok){
+    // a funcao busca_instrucao esta definida em tabelas.c
+    // a tabela de instrucoes esta declarada em bibliotecas_montador.h
+    TabelaDeInstrucoes* buscador = busca_instrucao(Instrucoes,tok);// endereco de onde esta a instrucao na tabela de instrucoes (se esta existir)
+    if(buscador!=NULL){
+        contador_posicao+= buscador->tamanho;
+        return TRUE;
+    }
     return FALSE;
 }
 int existe_diretiva(char *tok){
     return TRUE;
-}
-void busca_primeira_passagem(char* tok,TabelaDeSimbolos** TS){
-    rotulos_linha++;// o montador so precisa verificar se ha mais de um simbolo
-                    // por linha na primeira passagem. Se houver, um erro
-                    // eh registrado e a segunda passagem nao ocorre.
-    if(rotulos_linha<2){
-        tok[tam_string(tok)-1] = '\0';// tira os 2 pontos do token que eh rotulo
-        if(!existe_simbolo(*TS,tok)){
-            *TS = InsereSimbolo(*TS,tok,contador_posicao);
-        }else{
-            printf("\nSimbolo %s redefinido na linha %d\n",tok,contador_linha);
-        }
-    }else{
-        printf("\nHa mais de um rotulo na linha %d\n",contador_linha);
-    }
 }

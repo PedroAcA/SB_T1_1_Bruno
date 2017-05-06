@@ -5,10 +5,11 @@ typedef struct simbolos{
 } TabelaDeSimbolos;
 
 typedef struct instrucaoes{
-    char mnemonico[4];
+    char mnemonico[7];//6 caracteres de output + '\0'
     short int opcode;
-    short int tamanho;
-    short int operandos;
+    short int tamanho;//numero total de blocos de 16 bits que os operandos + instrucao ocupa ocupam
+                     // como o contador de posicao comeca em zero, somar o tamnho total gera o contador para a proxima instrucao
+    short int operandos;// eh realmente necessario se ja tem tamanho?
     struct instrucaoes* prox;
 } TabelaDeInstrucoes;
 
@@ -24,3 +25,6 @@ void* CriaTabela (void);
 TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos*, char*, int);
 TabelaEQU* InsereEquivalencia (TabelaEQU*, char*);
 int existe_simbolo(TabelaDeSimbolos*,char*);
+TabelaDeInstrucoes* inicializa_instrucoes();
+TabelaDeInstrucoes* InsereInstrucao(TabelaDeInstrucoes*,char*,short int,short int);
+TabelaDeInstrucoes* busca_instrucao(TabelaDeInstrucoes*,char*);

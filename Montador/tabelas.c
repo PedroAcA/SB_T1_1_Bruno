@@ -21,3 +21,37 @@ int existe_simbolo(TabelaDeSimbolos* tabela,char* simb){
     }
     return FALSE;
 }
+TabelaDeInstrucoes* inicializa_instrucoes(){
+    TabelaDeInstrucoes* Tabela = InsereInstrucao(NULL,"add",1,2);
+    Tabela = InsereInstrucao(Tabela,"sub",2,2);
+    Tabela = InsereInstrucao(Tabela,"mult",3,2);
+    Tabela = InsereInstrucao(Tabela,"div",4,2);
+    Tabela = InsereInstrucao(Tabela,"jmp",5,2);
+    Tabela = InsereInstrucao(Tabela,"jmpn",6,2);
+    Tabela = InsereInstrucao(Tabela,"jmpp",7,2);
+    Tabela = InsereInstrucao(Tabela,"jmpz",8,2);
+    Tabela = InsereInstrucao(Tabela,"copy",9,3);
+    Tabela = InsereInstrucao(Tabela,"load",10,2);
+    Tabela = InsereInstrucao(Tabela,"store",11,2);
+    Tabela = InsereInstrucao(Tabela,"input",12,2);
+    Tabela = InsereInstrucao(Tabela,"output",13,2);
+    Tabela = InsereInstrucao(Tabela,"stop",14,1);
+    return Tabela;
+}
+TabelaDeInstrucoes* InsereInstrucao(TabelaDeInstrucoes* tabela,char*nome,short int opcode,short int tamanho){
+    TabelaDeInstrucoes* novo = (TabelaDeInstrucoes*) malloc(sizeof(TabelaDeInstrucoes));
+    strcpy(novo->mnemonico, nome);
+    novo->opcode = opcode;
+    novo->tamanho = tamanho;
+    novo->prox = tabela;
+    return novo;
+}
+TabelaDeInstrucoes* busca_instrucao(TabelaDeInstrucoes* tabela_instrucoes,char* tok){
+    while(tabela_instrucoes!=NULL){
+        if(strcmp(tabela_instrucoes->mnemonico,tok)==0){
+            return tabela_instrucoes;
+        }
+        tabela_instrucoes = tabela_instrucoes->prox;
+    }
+    return NULL;
+}

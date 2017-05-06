@@ -3,6 +3,7 @@ int main(){
     char* nome_arq ={"teste1.asm"};
     FILE* arq;
     TabelaDeSimbolos* TS = CriaTabela();
+    Instrucoes = inicializa_instrucoes();
 //  char *linha,*token;
     passagem = 0;
     pre_processa(nome_arq);
