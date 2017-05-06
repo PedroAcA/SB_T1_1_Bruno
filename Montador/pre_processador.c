@@ -62,8 +62,8 @@ void pre_processa(char *nome_arq){
     //}
     rewind(arq);
 
-    resolve_equivalencias(arq, tabela);
-
+    resolve_equivalencias(arq, tabela);//OBS: se nao existir o .asm, arquivo temp.pre nao nunca sera criado
+                                       // pois funcao remove_desncessarios nao eh chamada. Nao seria bom ver se existe arquivo temp.pre?
     fclose(arq);
 
     remove("temp.pre");

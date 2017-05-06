@@ -1,11 +1,13 @@
 #include"bibliotecas_montador.h"
+#include <errno.h>//usada para identificar erros de conversao erros ao usar a funcao strtol
+#include <limits.h>//usada para identificar erros de conversao erros ao usar a funcao strtol
 //#define FALSE 0
 //#define TRUE !(FALSE)
 /*a variavel rotulos_linha indica quantos rotulos existem por linha
 (possibilita detectar o erro de mais de um rótulo por linha)
 */
-int contador_posicao,contador_linha,rotulos_linha;
-
+int contador_linha,rotulos_linha;
+short int contador_posicao;
 void verifica_linhas(FILE* arq,TabelaDeSimbolos** TS){
     int continua_busca_token;
     char *linha,*token;
@@ -44,6 +46,7 @@ int classifica(char* tok,TabelaDeSimbolos** TS){
         }else if(!existe_instrucao(tok)){
             if(!existe_diretiva(tok)){
                 printf("\nOperacao %s nao identificada na linha %d\n",tok,contador_linha);
+                total_erros++;
             }
         }
     }
@@ -56,12 +59,17 @@ int existe_rotulo(char * tok){
     int ultimo_caract = tam_string(tok)-1;// -1 pois os indices vao de 0 a tamanho-1
    // printf("Ultimo caracter de %s %c, cujo tamanho eh: %d",tok,tok[ultimo_caract],sizeof(tok));
     if(tok[ultimo_caract] == ':'){// ultimo caracter valido do token eh : e primeiro nao eh numero sao os requisitos
-     //   printf("Analisando rotulos\n");
-        if(!eh_numero(tok[0])){
-            return TRUE;
+        if(tam_string(tok)>51){// 50 caracteres de nome de variavel + 1 para ':'
+            printf("\nRotulo %s com mais de 50 caracteres\n",tok);
+            total_erros++;
         }else{
-            printf("\nRotulo %s mal formado na linha %d (rotulo nao pode comecar com numero)\n",tok,contador_linha);
+        //   printf("Analisando rotulos\n");
+            if(eh_numero(tok[0])){
+                printf("\nRotulo %s mal formado na linha %d (rotulo nao pode comecar com numero)\n",tok,contador_linha);
+                total_erros++;
+            }
         }
+        return TRUE;
     }
     return FALSE;
 }
@@ -78,9 +86,11 @@ void busca_primeira_passagem(char* tok,TabelaDeSimbolos** TS){
             *TS = InsereSimbolo(*TS,tok,contador_posicao);
         }else{
             printf("\nSimbolo %s redefinido na linha %d\n",tok,contador_linha);
+            total_erros++;
         }
     }else{
         printf("\nHa mais de um rotulo na linha %d\n",contador_linha);
+        total_erros++;
     }
 }
 
@@ -151,5 +161,70 @@ int incrementa_posicao(char*tok){
     return FALSE;
 }
 int existe_diretiva(char *tok){
-    return TRUE;
+    long int numero;//guarda informacoes da constante da diretiva CONST ou numero de espacos da diretiva space
+    short int endereco_correto;
+    char* aux_erro;//vai auxiliar a detectar erros de conversao entre a string para o numero correspondente
+    if(strcmp(tok,"section")==0 && passagem==1){//avalia diretivas section somente uma vez (na primeira passagem)
+        tok = prox_token();
+        if(strcmp(tok,"data")==0){//secao de dados
+            endereco_dados = contador_posicao;// manter o endereco inical da secao de dados possibilita saber se ha pulos
+                                              //para secao indevida
+        }else if(strcmp(tok,"text")!=0){// a diretiva eh section, mas os argumentos nao sao data ou text
+            printf("\nArgumentos da diretiva section invalidos na linha %d (diretiva section aceita somente text ou data como argumentos)\n",contador_linha);
+            total_erros++;
+        }
+        tok = prox_token();
+        if(existe_token(tok)){//diretiva section tem mais de um operando. Entao erro
+            printf("\nDiretiva section tem mais de um argumento na linha %d \n",contador_linha);
+            total_erros++;
+        }
+        return TRUE;
+    }else if(strcmp(tok,"space")==0){
+        tok = prox_token();
+        if(existe_token(tok)){
+            errno=0;//reseta a variavel de indicacao de erro
+            numero = strtol(tok,&aux_erro,0);// converte o numero representado em tok para um long int
+                                             //a opcao 0 faz a funcao escolher se o prefixo eh octal, decimal ou hexadecimal.
+            if(!existe_erro(numero,tok,aux_erro,errno)){
+                if(numero>=0){
+                    contador_posicao+= (short int)numero;
+                }else{
+                    printf("\nTotal de espacos a alocar menor que 0 na linha %d\n",contador_linha);
+                    total_erros++;
+                }
+            }else{
+                printf("\nErro na constante numerica da diretiva space na linha %d\n",contador_linha);
+                total_erros++;
+            }
+        }else{
+            contador_posicao++;
+        }
+        return TRUE;
+    }else if(strcmp(tok,"const")==0){
+        tok = prox_token();
+        if(existe_token(tok)){
+            //errno=0;
+           // numero = strtol(tok,aux_erro,0);
+            contador_posicao++;
+        }else{
+            printf("\nDiretiva const sem constante numerica na linha %d",contador_linha);
+            total_erros++;
+        }
+        return TRUE;
+    }else if(strcmp(tok,"public")==0){
+        return TRUE;
+    }else if(strcmp(tok,"extern")==0){
+        return TRUE;
+    }else if(strcmp(tok,"begin")==0){
+        fechou_begin_end = FALSE;
+        return TRUE;
+    }else if(strcmp(tok,"end")==0){
+        fechou_begin_end = TRUE;
+        return TRUE;
+    }
+    return FALSE;
+}
+int existe_erro(int numero, char*tok,char*aux_erro,int erno){
+    return (aux_erro == tok || *aux_erro!= '\0' ||
+            ((numero == LONG_MIN || numero == LONG_MAX) && erno == ERANGE));
 }

@@ -7,4 +7,4 @@ int existe_instrucao(char *);
 int incrementa_posicao(char*);
 int existe_diretiva(char *);
 void busca_primeira_passagem(char*,TabelaDeSimbolos**);
-
+int existe_erro(int numero, char*,char*,int);

@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1494031495 source:/home/paca/SB_T1_1_Bruno/Montador/arquivos.c
+1494037900 source:/home/paca/SB_T1_1_Bruno/Montador/arquivos.c
 	"bibliotecas_montador.h"
 
-1494031561 /home/paca/SB_T1_1_Bruno/Montador/bibliotecas_montador.h
+1494039934 /home/paca/SB_T1_1_Bruno/Montador/bibliotecas_montador.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -13,14 +13,14 @@
 	"tabelas.h"
 	"parser.h"
 
-1493393175 /home/paca/SB_T1_1_Bruno/Montador/scanner.h
+1494037900 /home/paca/SB_T1_1_Bruno/Montador/scanner.h
 
-1493384370 /home/paca/SB_T1_1_Bruno/Montador/arquivos.h
+1494037900 /home/paca/SB_T1_1_Bruno/Montador/arquivos.h
 
-1494031159 source:/home/paca/SB_T1_1_Bruno/Montador/montador.c
+1494079661 source:/home/paca/SB_T1_1_Bruno/Montador/montador.c
 	"bibliotecas_montador.h"
 
-1493943585 source:/home/paca/SB_T1_1_Bruno/Montador/scanner.c
+1494037900 source:/home/paca/SB_T1_1_Bruno/Montador/scanner.c
 	"bibliotecas_montador.h"
 
 1493428349 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\arquivos.c
@@ -46,9 +46,9 @@
 1493428350 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\scanner.c
 	"bibliotecas_montador.h"
 
-1493939480 /home/paca/SB_T1_1_Bruno/Montador/pre_processador.h
+1494037900 /home/paca/SB_T1_1_Bruno/Montador/pre_processador.h
 
-1493951333 source:/home/paca/SB_T1_1_Bruno/Montador/pre_processador.c
+1494080151 source:/home/paca/SB_T1_1_Bruno/Montador/pre_processador.c
 	"bibliotecas_montador.h"
 
 1493428350 c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\pre_processador.h
@@ -61,13 +61,15 @@
 1493428350 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\tabelas.c
 	"bibliotecas_montador.h"
 
-1494031550 /home/paca/SB_T1_1_Bruno/Montador/tabelas.h
+1494077055 /home/paca/SB_T1_1_Bruno/Montador/tabelas.h
 
-1494029678 /home/paca/SB_T1_1_Bruno/Montador/parser.h
+1494077092 /home/paca/SB_T1_1_Bruno/Montador/parser.h
 
-1493948018 source:/home/paca/SB_T1_1_Bruno/Montador/tabelas.c
+1494079857 source:/home/paca/SB_T1_1_Bruno/Montador/tabelas.c
 	"bibliotecas_montador.h"
 
-1494031282 source:/home/paca/SB_T1_1_Bruno/Montador/parser.c
+1494078894 source:/home/paca/SB_T1_1_Bruno/Montador/parser.c
 	"bibliotecas_montador.h"
+	<errno.h>
+	<limits.h>
 

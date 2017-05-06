@@ -2,7 +2,10 @@
 int main(){
     char* nome_arq ={"teste1.asm"};
     FILE* arq;
-    TabelaDeSimbolos* TS = CriaTabela();
+    TabelaDeSimbolos* TS =(TabelaDeSimbolos*) CriaTabela();
+    endereco_dados =-1;//indica onde comeca a secao de dados, se ela existe. Se nao existir, variavel tem valor -1
+    fechou_begin_end = TRUE;
+    total_erros = 0;
     Instrucoes = inicializa_instrucoes();
 //  char *linha,*token;
     passagem = 0;
@@ -15,6 +18,7 @@ int main(){
         //\u00E3 eh ã para unicode. 198 eh ã em ASCII
         printf("Arquivo %s n\u00E3o encontrado!","teste1.pre");
     }
+    printf("\nTotal de erros: %d\n",total_erros);
   /*  if(existe_arquivo(arq)){
         while(!feof(arq)){
             linha = proxima_linha(arq);

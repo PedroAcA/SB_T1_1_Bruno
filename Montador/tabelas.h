@@ -25,6 +25,6 @@ void* CriaTabela (void);
 TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos*, char*, int);
 TabelaEQU* InsereEquivalencia (TabelaEQU*, char*);
 int existe_simbolo(TabelaDeSimbolos*,char*);
-TabelaDeInstrucoes* inicializa_instrucoes();
+TabelaDeInstrucoes* inicializa_instrucoes(void);
 TabelaDeInstrucoes* InsereInstrucao(TabelaDeInstrucoes*,char*,short int,short int);
 TabelaDeInstrucoes* busca_instrucao(TabelaDeInstrucoes*,char*);

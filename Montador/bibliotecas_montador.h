@@ -10,5 +10,7 @@
 #include"pre_processador.h"
 #include"tabelas.h"
 #include"parser.h"
-int passagem;
+int passagem,total_erros,fechou_begin_end,endereco_dados;
 TabelaDeInstrucoes* Instrucoes;
+
+
