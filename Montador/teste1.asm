@@ -10,7 +10,9 @@ rot4: 42
 rot1: 1; redefiniu?
 9rpt: ;?
 power_of_DARK_SIDE A B ; isso nao existe jovem
-LOAD A
-COPY A,L1
+LOAD A rot3+b
+LOAD A rot3+2
+COPY A,rot3
+COPY A, rot3
 COPY A ;ops B
 STOP

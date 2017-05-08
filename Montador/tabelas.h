@@ -12,19 +12,30 @@ typedef struct instrucaoes{
     short int operandos;// eh realmente necessario se ja tem tamanho?
     struct instrucaoes* prox;
 } TabelaDeInstrucoes;
-
+/*
 typedef struct diretivas{
     char nome[10];
     short int tamanho;
     struct diretivas *prox;
 } TabelaDeDiretivas;
-
-
+*/
+// a TabeladeDiretivas vai facilitar a valiacao de divisoes por 0, modificacoes
+// de constantes e acesso de espacos nao reservados de memoria
+typedef struct diretivas{
+    short int posicao_memoria;
+    short int eh_cte;// para a diretiva const
+    short int eh_zero;// para a diretiva const
+    short int espacos_reservados;//para a diretiva space;
+    struct diretivas *prox;
+} TabelaDeDiretivas;
 
 void* CriaTabela (void);
 TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos*, char*, int);
 TabelaEQU* InsereEquivalencia (TabelaEQU*, char*);
-int existe_simbolo(TabelaDeSimbolos*,char*);
+TabelaDeSimbolos* existe_simbolo(TabelaDeSimbolos*,char*);
 TabelaDeInstrucoes* inicializa_instrucoes(void);
 TabelaDeInstrucoes* InsereInstrucao(TabelaDeInstrucoes*,char*,short int,short int);
 TabelaDeInstrucoes* busca_instrucao(TabelaDeInstrucoes*,char*);
+void libera_tabela_instrucoes(TabelaDeInstrucoes*);
+void libera_tabela_simbolos(TabelaDeSimbolos*);
+

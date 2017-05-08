@@ -43,6 +43,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="parser.h" />
+		<Unit filename="parser2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="parser2.h" />
 		<Unit filename="pre_processador.c">
 			<Option compilerVar="CC" />
 		</Unit>

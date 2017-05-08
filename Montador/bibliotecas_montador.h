@@ -10,7 +10,10 @@
 #include"pre_processador.h"
 #include"tabelas.h"
 #include"parser.h"
+#include "parser2.h"
+int contador_linha,rotulos_linha;
+short int contador_posicao;
 int passagem,total_erros,fechou_begin_end,endereco_dados;
 TabelaDeInstrucoes* Instrucoes;
-
+TabelaDeSimbolos* TS;
 

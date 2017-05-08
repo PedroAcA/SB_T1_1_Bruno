@@ -38,3 +38,12 @@ char* le_linha(FILE * arq){
         linha[i] = '\0';
         return linha;
 }
+char* elimina_caracter(char* str, char* c){
+     char* elimina;//usado para substituir o caracter , para um espaco quando ha copy
+     elimina= strstr (str,c);//aponta para o endereco de tok que contem ,
+        while(elimina!=NULL){
+            strncpy(elimina," ",1);
+            elimina = strstr (str,c);
+        }
+    return str;
+}

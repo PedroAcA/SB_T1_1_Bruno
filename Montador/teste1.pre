@@ -10,7 +10,9 @@ rot4: 42
 rot1: 1
 9rpt: 
 power_of_dark_side a b 
-load a
-copy a,l1
+load a rot3+b
+load a rot3+2
+copy a,rot3
+copy a, rot3
 copy a 
 stop

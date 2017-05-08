@@ -5,25 +5,24 @@ void * CriaTabela(){
 }
 
 TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos* tabela, char nome[], int valor){
-    TabelaDeSimbolos * novo = (TabelaDeSimbolos*) malloc(sizeof(TabelaDeSimbolos));
+    TabelaDeSimbolos * novo = (TabelaDeSimbolos*) calloc(1,sizeof(TabelaDeSimbolos));
     strcpy(novo->nome, nome);
     novo->valor = valor;
     novo->prox = tabela;
     tabela = novo;
-    return tabela;
+    return novo;
 }
-int existe_simbolo(TabelaDeSimbolos* tabela,char* simb){
+TabelaDeSimbolos* existe_simbolo(TabelaDeSimbolos* tabela,char* simb){
     while(tabela!=NULL){
         if(strcmp(tabela->nome,simb)==0){//achou simbolo na tabela de simbolos
-            return TRUE;
+            return tabela;
         }
         tabela = tabela->prox;
     }
-    return FALSE;
+    return NULL;
 }
 TabelaDeInstrucoes* inicializa_instrucoes(){
-    TabelaDeInstrucoes* Tabela = NULL;
-    Tabela = InsereInstrucao(NULL,"add",1,2);
+    TabelaDeInstrucoes* Tabela=InsereInstrucao(NULL,"add",1,2);
     Tabela = InsereInstrucao(Tabela,"sub",2,2);
     Tabela = InsereInstrucao(Tabela,"mult",3,2);
     Tabela = InsereInstrucao(Tabela,"div",4,2);
@@ -61,4 +60,20 @@ TabelaDeInstrucoes* busca_instrucao(TabelaDeInstrucoes* tabela_instrucoes,char* 
         tabela_instrucoes = tabela_instrucoes->prox;
     }
     return NULL;
+}
+void libera_tabela_instrucoes(TabelaDeInstrucoes* ins){
+    TabelaDeInstrucoes* aux;
+    while(ins!=NULL){
+        aux = ins->prox;
+        free(ins);
+        ins = aux;
+    }
+}
+void libera_tabela_simbolos(TabelaDeSimbolos* s){
+    TabelaDeSimbolos* aux;
+    while(s!=NULL){
+        aux = s->prox;
+        free(s);
+        s = aux;
+    }
 }
