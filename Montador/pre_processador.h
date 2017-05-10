@@ -3,13 +3,15 @@
 
 typedef struct EQU{
     char nome[50];
+    char equivalencia[50];
     struct EQU* prox;
 } TabelaEQU;
 
-void preprocessamento (FILE * );
-void pre_processa(char *);
-int EhEQU (char *, char[]);
-void limpa(char* , int);
-void lista_equivalencias (FILE*, TabelaEQU*);
-void resolve_equivalencias(FILE*, TabelaEQU*);
-int TaNaLista(char[], TabelaEQU*);
+void pre_processa(char[]);
+void remove_desnecessarios (FILE *);
+TabelaEQU* cria_lista(FILE*,TabelaEQU*);
+void limpa(char*, int);
+int EhEQU (char*, char[], char[]);
+TabelaEQU* InsereEquivalencia (TabelaEQU*, char[], char[] );
+void analisa_equivalencias(FILE*, TabelaEQU*);
+void remove_diretivas(FILE*);
