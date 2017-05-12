@@ -13,7 +13,7 @@ void verifica_linhas(FILE* arq){
     rotulos_linha = 0;
     contador_posicao=0;
     contador_linha=1;
-    printf("\nPASSAGEM: %d\n",passagem);
+   // printf("\nPASSAGEM: %d\n",passagem);
     while(!feof(arq)){
         linha = proxima_linha(arq);
       //  printf("\nLinha lida %s\n",linha);
@@ -109,8 +109,8 @@ int existe_instrucao(char *tok){
             if(!existe_token(prox_token())){
                 //if(!existe_argumento_externo()){
                     if(enderecos_sem_erros(instrucao_atual->mnemonico,endereco_args,indice_vetor)){
-                        //escreve_instrucao(instrucao_atual,endereco_args);
-                        printf("Tudo correto com a instrucao %s de argumentos %d e %d\n",instrucao_atual->mnemonico,endereco_args[0],endereco_args[1]);
+                        escreve_instrucao(instrucao_atual,endereco_args);
+                        //printf("Tudo correto com a instrucao %s de argumentos %d e %d\n",instrucao_atual->mnemonico,endereco_args[0],endereco_args[1]);
                     }
                 //}else{
                     //if(endereco_nao_externo_sem_erro(instrucao_atual->mnemonico,endereco_args,indice_vetor))
@@ -167,9 +167,12 @@ int existe_diretiva(char *tok){
                 total_erros++;
             }
         }else{
+            numero=1;
             Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'E',1);
             contador_posicao++;
         }
+        if(passagem==2)
+            escreve_diretiva('E',numero);
         return TRUE;
     }else if(strcmp(tok,"const")==0){
         tok = prox_token();
@@ -181,6 +184,9 @@ int existe_diretiva(char *tok){
             printf("\nDiretiva const sem constante numerica na linha %d",contador_linha);
             total_erros++;
         }
+        if(passagem==2)
+            escreve_diretiva('C',numero);
+
         return TRUE;
     }else if(strcmp(tok,"public")==0){
         return TRUE;

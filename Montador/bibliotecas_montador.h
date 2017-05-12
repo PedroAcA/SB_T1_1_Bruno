@@ -5,10 +5,10 @@
 #include<stdlib.h>
 #include<string.h>
 #include<ctype.h>
+#include"tabelas.h"
 #include"scanner.h"
 #include"arquivos.h"
 #include"pre_processador.h"
-#include"tabelas.h"
 #include"parser.h"
 #include "parser2.h"
 short int *indice_realocacao;

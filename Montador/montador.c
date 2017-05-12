@@ -24,6 +24,7 @@ int main(){
         rewind(arq);
         printf("\nEndereco section data: %d\n",endereco_dados);
         passagem++;
+        cria_arq_obj();
         verifica_linhas(arq);
         fclose(arq);
 
@@ -31,11 +32,17 @@ int main(){
         //\u00E3 eh ã para unicode. 198 eh ã em ASCII
         printf("Arquivo %s n\u00E3o encontrado!","teste1.pre");
     }
+    if(total_erros>0){
+        exclui_arq_obj();
+    }else{
+        escreve_tabelas();
+    }
+    /*
     printf("\nTabela de realocacao:\n");
     // o indice vai ate i<(tamanho_realoc-1) pois sempre eh reservado um espaco a mais para a proxima info de realocao. Ai, no final, sobra 1 elemento
     for(i=0;i<(tamanho_realoc-1);i++){
         printf("%u ",indice_realocacao[i]);
-    }
+    }*/
     printf("\nTotal de erros: %d\n",total_erros);
     libera_tabela_instrucoes(Instrucoes);
     libera_tabela_simbolos(TS);

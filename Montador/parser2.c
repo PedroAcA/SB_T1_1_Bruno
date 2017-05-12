@@ -37,7 +37,7 @@ int extrai_endereco(char* tok,short int* indice_vetor){// vai pegar uma label ou
     TabelaDeSimbolos* buscador;
     int endereco;
     if(tem_aritmetica(tok)){
-        endereco = converte_exp_aritmetica(tok,indice_vetor);
+        endereco = converte_exp_aritmetica(tok,indice_vetor,(ha_externo+indice_externo));
     }else{
         buscador = existe_simbolo(TS,tok);
         //if(buscador->externo == 's')

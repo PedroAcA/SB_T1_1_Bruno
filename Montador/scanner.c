@@ -68,7 +68,7 @@ int tem_aritmetica(char* tok){
 }
 //funcao converte_exp_artimetica usa strtok_r para nao perder a referencia
     // do proximo token com relacao ao token original da linha lida
-int converte_exp_aritmetica(char* tok,short int* indice_vetor){
+int converte_exp_aritmetica(char* tok,short int* indice_vetor,char *tem_extern){
     int numero=0;
     char *copia_tok = (char*) malloc((tam_string(tok)+1)*sizeof(char));
     char* end_tok,*inicio_desaloc;//o inicio da string copia tem q se salvo pois a funcao strtok_r muda o endereco de copia_tok a cada passagem
@@ -80,6 +80,8 @@ int converte_exp_aritmetica(char* tok,short int* indice_vetor){
     if(existe_token(copia_tok)){//inicio da avaliacao do rotulo
             buscador = existe_simbolo(TS,copia_tok);
         if(buscador!=NULL){
+            //if(buscador->externo == 's')
+                //*tem_extern='T';
             numero= buscador->valor;
             copia_tok = strtok_r(NULL," ",&end_tok);
             if(existe_token(copia_tok)){// inicio da avalicao do numero
