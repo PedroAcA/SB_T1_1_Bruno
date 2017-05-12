@@ -1,4 +1,7 @@
 #include"bibliotecas_montador.h"
+#include <errno.h>//usada para identificar erros de conversao erros ao usar a funcao strtol
+#include <limits.h>//usada para identificar erros de conversao erros ao usar a funcao strtol
+
 char * proxima_linha(FILE * arq){//assume que o arquivo ja esta aberto
     char *palavra;
     palavra = le_linha(arq);
@@ -15,7 +18,6 @@ char* prox_token(){
     return strtok(NULL," ");
 
 }
-
 /*tam_string retorna o numero de elementos em uma string*/
 int tam_string(char* str){
     return strlen(str);
@@ -38,12 +40,64 @@ char* le_linha(FILE * arq){
         linha[i] = '\0';
         return linha;
 }
-char* elimina_caracter(char* str, char* c){
+char* elimina_caracter(char* str, char* c){//eleimina somente a primeira ocorrencia do caracter na string
      char* elimina;//usado para substituir o caracter , para um espaco quando ha copy
      elimina= strstr (str,c);//aponta para o endereco de tok que contem ,
-        while(elimina!=NULL){
+        if(elimina!=NULL){
             strncpy(elimina," ",1);
-            elimina = strstr (str,c);
+        //    elimina = strstr (str,c);
         }
     return str;
+}
+short int converte_em_num(char* copia_tok,short int numero){
+    long int str_p_num;
+    char *aux_erro;
+    errno=0;
+    str_p_num = strtol(copia_tok,&aux_erro,0);
+    if(!existe_erro_conversao(str_p_num,copia_tok,aux_erro,errno)){
+        numero+= (short int)str_p_num;
+    }else{
+        printf("\nErro na contante numerica de vetor na linha %d\n",contador_linha);
+        numero=-1;
+        total_erros++;
+    }
+    return numero;
+}
+int tem_aritmetica(char* tok){
+    return(strchr(tok,'+')!=NULL);
+}
+//funcao converte_exp_artimetica usa strtok_r para nao perder a referencia
+    // do proximo token com relacao ao token original da linha lida
+int converte_exp_aritmetica(char* tok,short int* indice_vetor){
+    int numero=0;
+    char *copia_tok = (char*) malloc((tam_string(tok)+1)*sizeof(char));
+    char* end_tok,*inicio_desaloc;//o inicio da string copia tem q se salvo pois a funcao strtok_r muda o endereco de copia_tok a cada passagem
+    TabelaDeSimbolos* buscador;
+    strcpy(copia_tok,tok);
+    inicio_desaloc = copia_tok;
+    copia_tok = elimina_caracter(copia_tok,"+");
+    copia_tok =strtok_r(copia_tok," ",&end_tok);// como houve experessoes como v+1, tem q retokenizar a string
+    if(existe_token(copia_tok)){//inicio da avaliacao do rotulo
+            buscador = existe_simbolo(TS,copia_tok);
+        if(buscador!=NULL){
+            numero= buscador->valor;
+            copia_tok = strtok_r(NULL," ",&end_tok);
+            if(existe_token(copia_tok)){// inicio da avalicao do numero
+                numero = converte_em_num(copia_tok,numero);
+                *indice_vetor = numero-buscador->valor;
+            }else{
+                printf("\nErro na formacao do endereco do vetor %s na linha %d \n",tok,contador_linha);
+                total_erros++;
+            }
+        }else{
+            printf("\nSimbolo %s nao definido na linha %d\n",copia_tok,contador_linha);
+            numero = -1;
+            total_erros++;
+        }
+    }else{
+        printf("\nExpressao %s invalida na linha %d \n",tok,contador_linha);
+        total_erros++;
+    }
+    free(inicio_desaloc);
+    return numero;
 }

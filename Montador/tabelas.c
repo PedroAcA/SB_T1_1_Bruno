@@ -1,10 +1,12 @@
 #include"bibliotecas_montador.h"
-
+TabelaDeObjetos *Inicio=NULL,*Fim=NULL;// ponteiros internos para criar a fila de codigo objeto
+                             // assim, é possivel escrever as tabelas e o codigo
+                             // objeto na ordem em que aparecem
 void * CriaTabela(){
     return NULL;
 }
 
-TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos* tabela, char nome[], int valor){
+TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos* tabela, char nome[],short int valor){
     TabelaDeSimbolos * novo = (TabelaDeSimbolos*) calloc(1,sizeof(TabelaDeSimbolos));
     strcpy(novo->nome, nome);
     novo->valor = valor;
@@ -61,6 +63,81 @@ TabelaDeInstrucoes* busca_instrucao(TabelaDeInstrucoes* tabela_instrucoes,char* 
     }
     return NULL;
 }
+TabelaDeDiretivas* insereDiretiva(TabelaDeDiretivas* Dir,int posicao_memoria,char tipo,int valor){
+    TabelaDeDiretivas* novo = (TabelaDeDiretivas*)malloc(sizeof(TabelaDeDiretivas));
+    if(novo==NULL){
+        printf("Sistema Operacional nao conseguiu reservar espaco de memoria\n");
+        exit(-1);
+    }else{
+        novo->posicao_memoria = posicao_memoria;
+        novo->tipo = tipo;
+        novo->valor= valor;
+        novo->prox = Dir;
+    }
+    return novo;
+}
+TabelaDeDiretivas* busca_end_incial(TabelaDeDiretivas* Diretivas, int end_base){
+    while(Diretivas!=NULL){
+        if(Diretivas->posicao_memoria == end_base){
+            return Diretivas;
+        }
+        Diretivas = Diretivas->prox;
+    }
+    return Diretivas;
+}
+/*
+void Insere_Codigo_Objeto_Instr(TabelaDeInstrucoes* instrucao,short int* args){
+    TabelaDeObjetos* novo = (TabelaDeObjetos*)malloc(sizeof(TabelaDeObjetos));
+    if(novo!=NULL){
+        novo->tipo = 'I';
+        novo->prox=NULL;
+        novo->valor = instrucao->opcode;
+        if(strcmp(instrucao->mnemonico,"copy")==0){
+            novo->op1 = args[0];
+            novo->op2 = args[1];
+        }else if(strcmp(instrucao->mnemonico,"stop")!=0){// instrucao a ser salva nao eh stop
+            novo->op1 = args[0];
+        }
+        if(Inicio==NULL){
+            Inicio = novo;
+            Fim = novo;
+        }else{
+            Fim->prox = novo;
+            Fim = novo;
+        }
+    }else{
+        printf("Sistema Operacional nao conseguiu reservar espaco de memoria\n");
+        exit(-1);
+    }
+}
+
+void Insere_Codigo_Objeto_Dir(char tipo,short int valor){
+    TabelaDeObjetos* novo = (TabelaDeObjetos*)malloc(sizeof(TabelaDeObjetos));
+    if(novo!=NULL){
+        novo->tipo = tipo;
+        novo->prox=NULL;
+        novo->valor = valor;
+        if(Inicio==NULL){
+            Inicio = novo;
+            Fim = novo;
+        }else{
+            Fim->prox = novo;
+            Fim = novo;
+        }
+    }else{
+        printf("Sistema Operacional nao conseguiu reservar espaco de memoria\n");
+        exit(-1);
+    }
+}
+void desaloca_Tabela_Objetos(){
+    TabelaDeObjetos* aux
+    while(Inicio!=NULL){
+        aux = Inicio->prox;
+        free(Inicio);
+        Inicio=aux;
+    }
+}
+*/
 void libera_tabela_instrucoes(TabelaDeInstrucoes* ins){
     TabelaDeInstrucoes* aux;
     while(ins!=NULL){
@@ -75,5 +152,13 @@ void libera_tabela_simbolos(TabelaDeSimbolos* s){
         aux = s->prox;
         free(s);
         s = aux;
+    }
+}
+void libera_tabela_diretivas(TabelaDeDiretivas* d){
+    TabelaDeDiretivas* aux;
+    while(d!=NULL){
+        aux = d->prox;
+        free(d);
+        d = aux;
     }
 }

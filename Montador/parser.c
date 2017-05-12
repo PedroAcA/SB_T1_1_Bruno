@@ -19,12 +19,12 @@ void verifica_linhas(FILE* arq){
       //  printf("\nLinha lida %s\n",linha);
         //printf("\nContador linha: %d\n",contador_linha);
         token = divide_tokens(linha);
-      //  printf("\nToken lido %s\n",token);
+       // printf("\nToken lido %s\n",token);
         continua_busca_token = classifica(token);
        // printf("\nContador posicao: %d\n",contador_posicao);
         while(token!=NULL && continua_busca_token){
             token = prox_token();
-         //   printf("\n\tToken lido %s\n",token);
+           // printf("\n\tToken lido %s\n",token);
             continua_busca_token =classifica(token);
          //   printf("\nContador posicao: %d\n",contador_posicao);
         }
@@ -45,8 +45,10 @@ int classifica(char* tok){
             return TRUE;
         }else if(!existe_instrucao(tok)){
             if(!existe_diretiva(tok)){
-                printf("\nOperacao %s nao identificada na linha %d\n",tok,contador_linha);
-                total_erros++;
+                if(passagem==1){//para nao repetir a msm msg de erro com relacao a primeira passagem
+                    printf("\nOperacao %s nao identificada na linha %d\n",tok,contador_linha);
+                    total_erros++;
+                }
             }
         }
     }
@@ -59,14 +61,16 @@ int existe_rotulo(char * tok){
     int ultimo_caract = tam_string(tok)-1;// -1 pois os indices vao de 0 a tamanho-1
    // printf("Ultimo caracter de %s %c, cujo tamanho eh: %d",tok,tok[ultimo_caract],sizeof(tok));
     if(tok[ultimo_caract] == ':'){// ultimo caracter valido do token eh : e primeiro nao eh numero sao os requisitos
-        if(tam_string(tok)>51){// 50 caracteres de nome de variavel + 1 para ':'
-            printf("\nRotulo %s com mais de 50 caracteres\n",tok);
-            total_erros++;
-        }else{
-        //   printf("Analisando rotulos\n");
-            if(eh_numero(tok[0])){
-                printf("\nRotulo %s mal formado na linha %d (rotulo nao pode comecar com numero)\n",tok,contador_linha);
+        if(passagem==1){// so precisa avaliar o rotulo em uma passagem so
+            if(tam_string(tok)>51){// 50 caracteres de nome de variavel + 1 para ':'
+                printf("\nRotulo %s com mais de 50 caracteres\n",tok);
                 total_erros++;
+            }else{
+            //   printf("Analisando rotulos\n");
+                if(eh_numero(tok[0])){
+                    printf("\nRotulo %s mal formado na linha %d (rotulo nao pode comecar com numero)\n",tok,contador_linha);
+                    total_erros++;
+                }
             }
         }
         return TRUE;
@@ -82,7 +86,7 @@ void busca_primeira_passagem(char* tok){
                     // eh registrado e a segunda passagem nao ocorre.
     if(rotulos_linha<2){
         tok[tam_string(tok)-1] = '\0';// tira os 2 pontos do token que eh rotulo
-        if(existe_simbolo(TS,tok)==NULL){
+        if(existe_simbolo(TS,tok)==NULL){//existe_simbolo() vai buscar o endereco do delemnto da tabeladesimbolos que tem o token. Se na ha tal elemento, retona NULL
           //  printf("\nInserindo %s na tabela de simbolos\n",tok);
             TS = InsereSimbolo(TS,tok,contador_posicao);
         }else{
@@ -97,73 +101,29 @@ void busca_primeira_passagem(char* tok){
 
 int existe_instrucao(char *tok){
     TabelaDeInstrucoes* instrucao_atual = busca_incrementa_posicao(tok);
-//    char** argumentos[2];//pega os argumentos da funcao como uma lista de string
-    int* endereco_args;// lista dos enderecos de memoria dos argumentos presentes na linha analisada
-    int qte_args,i;
+    short int endereco_args[2],indice_vetor[2];//endereco_args= lista dos enderecos de memoria dos argumentos presentes na linha analisada
     if(instrucao_atual!=NULL){//OBS: adicionar funcionalidades de segunda passagem depois
-       //if(passagem==2 && argumentos_validos(instrucao_atual,argumentos,tok)){
         if(passagem==2){
             tok = prox_token();
-            endereco_args = converte_em_enderecos(tok,instrucao_atual,&qte_args);
-            printf("\nARGUMENTOS de %s\n",instrucao_atual->mnemonico);
-            for(i=0;i<qte_args;i++){
-                printf("\t%d\n",endereco_args[i]);
+            converte_em_enderecos(tok,instrucao_atual,indice_vetor,endereco_args);
+            if(!existe_token(prox_token())){
+                //if(!existe_argumento_externo()){
+                    if(enderecos_sem_erros(instrucao_atual->mnemonico,endereco_args,indice_vetor)){
+                        //escreve_instrucao(instrucao_atual,endereco_args);
+                        printf("Tudo correto com a instrucao %s de argumentos %d e %d\n",instrucao_atual->mnemonico,endereco_args[0],endereco_args[1]);
+                    }
+                //}else{
+                    //if(endereco_nao_externo_sem_erro(instrucao_atual->mnemonico,endereco_args,indice_vetor))
+                        //escreve_instrucao();
+                //}
+            }else{
+                    printf("Numero incorreto de argumentos para a instrucao %s na linha %d\n",instrucao_atual->mnemonico,contador_linha);
+                    total_erros++;
             }
-              free(endereco_args);
-            //escreve_objeto("teste1.o",instrucao_atual,argumentos);
-        }else if(passagem==2){
-            printf("\nInstrucao com argumentos invalidos na linha %d\n",contador_linha);
-            total_erros++;
         }
-
         return TRUE;
     }
     return FALSE;
-/*
-    if(strcmp(tok,"add")==0){
-        contador_posicao+= 2;
-        return TRUE;
-    }else if(strcmp(tok,"sub")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"mult")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"div")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"jmp")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"jmpn")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"jmpp")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"jmpz")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"copy")==0){
-        contador_posicao+=3;
-        return TRUE;
-    }else if(strcmp(tok,"load")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"store")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"input")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"output")==0){
-        contador_posicao+=2;
-        return TRUE;
-    }else if(strcmp(tok,"stop")==0){
-        contador_posicao+=1;
-        return TRUE;
-    }
-    */
 }
 /*A funcao incrementa_posicao busca se a instrucao eh valida e, se for,
   atualiza o contador_posicao. Retorna TRUE(definido em pre_processador.h)
@@ -179,9 +139,7 @@ TabelaDeInstrucoes* busca_incrementa_posicao(char*tok){
     return buscador;
 }
 int existe_diretiva(char *tok){
-    long int numero;//guarda informacoes da constante da diretiva CONST ou numero de espacos da diretiva space
-//    short int endereco_correto;
-    char* aux_erro;//vai auxiliar a detectar erros de conversao entre a string para o numero correspondente
+    short int numero=0;//guarda informacoes da constante da diretiva CONST ou numero de espacos da diretiva space
     if(strcmp(tok,"section")==0){//avalia diretivas section somente uma vez (na primeira passagem)
         tok = prox_token();
         if(strcmp(tok,"data")==0){//secao de dados
@@ -200,29 +158,24 @@ int existe_diretiva(char *tok){
     }else if(strcmp(tok,"space")==0){
         tok = prox_token();
         if(existe_token(tok)){
-            errno=0;//reseta a variavel de indicacao de erro
-            numero = strtol(tok,&aux_erro,0);// converte o numero representado em tok para um long int
-                                             //a opcao 0 faz a funcao escolher se o prefixo eh octal, decimal ou hexadecimal.
-            if(!existe_erro_conversao(numero,tok,aux_erro,errno)){
-                if(numero>=0){
-                    contador_posicao+= (short int)numero;
-                }else{
-                    printf("\nTotal de espacos a alocar menor que 0 na linha %d\n",contador_linha);
-                    total_erros++;
-                }
+            numero= converte_em_num(tok,numero);
+            if(numero>=0){
+                Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'E',numero);
+                contador_posicao+=numero;
             }else{
-                printf("\nErro na constante numerica da diretiva space na linha %d\n",contador_linha);
+                printf("\nTotal de espacos a alocar menor que 0 ou erro na constante numerica na linha %d\n",contador_linha);
                 total_erros++;
             }
         }else{
+            Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'E',1);
             contador_posicao++;
         }
         return TRUE;
     }else if(strcmp(tok,"const")==0){
         tok = prox_token();
         if(existe_token(tok)){
-            //errno=0;
-           // numero = strtol(tok,aux_erro,0);
+            numero = converte_em_num(tok,numero);
+            Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'C',numero);
             contador_posicao++;
         }else{
             printf("\nDiretiva const sem constante numerica na linha %d",contador_linha);

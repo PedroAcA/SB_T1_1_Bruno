@@ -5,31 +5,43 @@
 // assembly inventado so aceita label+nuemro e nao label-numero
 // a funcao converte_em_enderecos retira a virgula se for encontado a funcao
 // copy e susbtui ela pro espaco. Espera que o ultimo token seja o primeiro argumento.
-int* converte_em_enderecos(char *tok,TabelaDeInstrucoes* instrucao_atual,int* qte_args){
-    int *args;
+char ha_externo[2];
+int indice_externo;
+void converte_em_enderecos(char *tok,TabelaDeInstrucoes* instrucao_atual,short int* indice_vetor,short int*args){
     int tam=0;
-//    char *copia_tok,*end_tok,*inicio_desaloc;
-    args = (int*)malloc(sizeof(int));
+    indice_externo=0;
+    ha_externo[0] = 'F';
+    ha_externo[1] = 'F';
     if(strcmp(instrucao_atual->mnemonico,"copy")==0){
-        args = processa_argumentos_copy(tok,&tam,args);
+        processa_argumentos_copy(tok,indice_vetor,args);
         tok = prox_token();
+    }else if(existe_token(tok)){
+        indice_realocacao[tamanho_realoc-1] = contador_posicao-1;
+        tamanho_realoc++;
+        indice_realocacao = (short int*) realloc(indice_realocacao,tamanho_realoc*sizeof(short int));
+        tam++;
+        args[0] = extrai_endereco(tok,indice_vetor);
+    }else if(strcmp(instrucao_atual->mnemonico,"stop")==0){//nao ha argumentos e a instrucao eh stop
+          args[0] = -2;// entao colocamos -2 na posicao 0 de args para indicar stop com argumentos corretos
+          indice_vetor[0] = 0;
     }
-    while(existe_token(tok)){
+    /*while(existe_token(tok)){
             tam++;
             args = (int*)realloc(args,tam*sizeof(int));
             args[tam-1] =  extrai_endereco(tok);
             tok = prox_token();
-    }
-    *qte_args = tam;
-    return args;
+    }*/
+    //*qte_args = tam;
 }
-int extrai_endereco(char* tok){// vai pegar uma label ou label+ numero e retornar o endereco resultante
+int extrai_endereco(char* tok,short int* indice_vetor){// vai pegar uma label ou label+ numero e retornar o endereco resultante
     TabelaDeSimbolos* buscador;
     int endereco;
     if(tem_aritmetica(tok)){
-        endereco = converte_exp_aritmetica(tok);
+        endereco = converte_exp_aritmetica(tok,indice_vetor);
     }else{
         buscador = existe_simbolo(TS,tok);
+        //if(buscador->externo == 's')
+            //ha_externo[indice_externo]='T';
         if(buscador!=NULL){
             endereco = buscador->valor;
         }else{
@@ -37,58 +49,13 @@ int extrai_endereco(char* tok){// vai pegar uma label ou label+ numero e retorna
             printf("\nSimbolo %s nao definido na linha %d\n",tok,contador_linha);
             total_erros++;
         }
+        *indice_vetor = 0;
     }
     return endereco;
 }
 
-int tem_aritmetica(char* tok){
-    return(strchr(tok,'+')!=NULL);
-}
-//funcao converte_exp_artimetica usa strtok_r para nao perder a referencia
-    // do proximo token com relacao ao token original da linha lida
-int converte_exp_aritmetica(char* tok){
-    int numero=0;
-    long int str_p_num;
-    char *copia_tok = (char*) malloc((tam_string(tok)+1)*sizeof(char));
-    char* end_tok,*inicio_desaloc,*aux_erro;//o inicio da string copia tem q se salvo pois a funcao strtok_r muda o endereco de copia_tok a cada passagem
-    TabelaDeSimbolos* buscador;
-    strcpy(copia_tok,tok);
-    inicio_desaloc = copia_tok;
-    copia_tok = elimina_caracter(copia_tok,"+");
-    copia_tok =strtok_r(copia_tok," ",&end_tok);// como houve experessoes como v+1, tem q retokenizar a string
-    if(existe_token(copia_tok)){//inicio da avaliacao do rotulo
-            buscador = existe_simbolo(TS,copia_tok);
-        if(buscador!=NULL){
-            numero+= buscador->valor;
-            copia_tok = strtok_r(NULL," ",&end_tok);
-            if(existe_token(copia_tok)){// inicio da avalicao do numero
-                errno=0;
-                str_p_num = strtol(copia_tok,&aux_erro,0);
-                if(!existe_erro_conversao(str_p_num,copia_tok,aux_erro,errno)){
-                    numero+= (int)str_p_num;
-                }else{
-                    printf("\nErro na contante numerica de vetor na linha %d\n",contador_linha);
-                    numero=-1;
-                    total_erros++;
-                }
-            }else{
-                printf("\nErro na formacao do endereco do vetor %s na linha %d \n",tok,contador_linha);
-                total_erros++;
-            }
-        }else{
-            printf("\nSimbolo %s nao definido na linha %d\n",copia_tok,contador_linha);
-            numero = -1;
-            total_erros++;
-        }
-    }else{
-        printf("\nExpressao %s invalida na linha %d \n",tok,contador_linha);
-        total_erros++;
-    }
-    free(inicio_desaloc);
-    return numero;
-}
-int* processa_argumentos_copy(char* tok,int* tamanho,int* args){
-    int tam=*tamanho;
+void processa_argumentos_copy(char* tok,short int* indice_vetor,short int* args){
+    short int tam=0;
     char *copia_tok,*end_tok,*inicio_desaloc;
     copia_tok = (char*) malloc((tam_string(tok)+1)*sizeof(char));
     strcpy(copia_tok,tok);
@@ -96,24 +63,119 @@ int* processa_argumentos_copy(char* tok,int* tamanho,int* args){
     if(strchr(copia_tok,',')!=NULL){
         copia_tok = elimina_caracter(tok,",");// testar para ve se strok funciona apos essa sepacacao
         copia_tok = strtok_r(copia_tok," ",&end_tok);
-        while(existe_token(copia_tok)){
+        while(existe_token(copia_tok) && (strchr(copia_tok,',')==NULL) ){// pra copy ser valido so pode ter uma virgula no espaco dos argumentos
             tam++;
-            args = (int*)realloc(args,tam*sizeof(int));
-            args[tam-1]=extrai_endereco(copia_tok);
+            // para o primeiro argumento, o contador de posicao eh contador_posicao-2. Como tam vai de 1 a 2, a relacao contador_posicao-2+(tam-1) da a posicao do codigo objeto de cada argumento de copy
+            indice_realocacao[tamanho_realoc-1] = contador_posicao-2+(tam-1);
+            tamanho_realoc++;
+            indice_realocacao = (short int*) realloc(indice_realocacao,tamanho_realoc*sizeof(short int));
+            //indice_externo = tam-1;
+            args[tam-1]=extrai_endereco(copia_tok,(indice_vetor+tam-1));
             copia_tok = strtok_r(NULL," ",&end_tok);
         }
-        if((tam - *tamanho) <2){//gera o numero de argumentos lidos para copy
-            printf("\nNumero de argumentos menor do que o esperado para copy na linha %d\n",contador_linha);
-            total_erros++;
-        }else if((tam - *tamanho)>2){
-            printf("\nNumero de argumentos maior do que o esperado para copy na linha %d\n",contador_linha);
-            total_erros++;
-        }
+        erros_args_copy(tam);
     }else{
         printf("\nFormato dos argumentos de copy incorreto na linha %d\n",contador_linha);
         total_erros++;
     }
     free(inicio_desaloc);
-    *tamanho =tam;
-    return args;
+}
+void erros_args_copy(short int n_args){
+    if(n_args <2){//gera o numero de argumentos lidos para copy
+        printf("\nNumero de argumentos menor do que o esperado para copy na linha %d\n",contador_linha);
+        total_erros++;
+    }else if(n_args>2){
+        printf("\nNumero de argumentos maior do que o esperado para copy na linha %d\n",contador_linha);
+        total_erros++;
+    }
+}
+int enderecos_sem_erros(char *nome_instr,short int* enderecos,short int*indices){
+    short int end_base[2],i;
+    TabelaDeDiretivas* buscador;
+    for(i=0;i<2;i++){
+        end_base[i] = enderecos[i] - indices[i];
+    }
+     buscador =  busca_end_incial(Tab_Dir,end_base[0]);
+    if(strcmp(nome_instr,"copy")==0 && buscador!=NULL){
+        return argumentos_copy_corretos(buscador,indices,end_base);
+    }else if(eh_pulo(nome_instr)){
+        return pulo_valido(enderecos[0]);
+    }else if (strcmp(nome_instr,"stop")==0){
+        return endereco_stop_correto(enderecos[0]);
+    }else{
+        if(buscador!=NULL){
+            if(acessa_memoria(nome_instr)){// todas as instrucoes que acessam a memoria, a execessao do copy
+                return endereco_acesso_memoria_valido(buscador,indices,0);
+            }else if(strcmp(nome_instr,"div")==0){//n se pode dividir por 0
+                return (divide_zero(buscador)==FALSE);
+            }else{
+                return endereco_alocado(buscador,indices,0);
+            }
+        }else{
+            printf("Endereco nao reservado como constante ou espaco na linha %d\n",contador_linha);
+            total_erros++;
+        }
+    }
+    return FALSE;
+}
+int eh_constante(TabelaDeDiretivas* diretiva_atual){
+    return (diretiva_atual->tipo == 'C');
+}
+int memoria_alocada(TabelaDeDiretivas* diretiva_atual,int indice){
+    return indice < diretiva_atual->valor;
+}
+int eh_pulo(char *instrucao){
+    return (strcmp(instrucao,"jmp")==0 ||strcmp(instrucao,"jmpn")==0
+            || strcmp(instrucao,"jmpp")==0 || strcmp(instrucao,"jmpz")==0);
+}
+int acessa_memoria(char *instrucao){
+    return (strcmp(instrucao,"store")==0 ||strcmp(instrucao,"input")==0);
+}
+int endereco_acesso_memoria_valido(TabelaDeDiretivas* buscador,short int* indices,int ind_arg){
+    if(!eh_constante(buscador)){
+        return endereco_alocado(buscador,indices,ind_arg);
+    }else{
+        printf("Tentiva de modificar um valor constante na linha %d\n",contador_linha);
+        total_erros++;
+    }
+    return FALSE;
+}
+int endereco_alocado(TabelaDeDiretivas* buscador,short int* indices,int ind_arg){
+    if(memoria_alocada(buscador,indices[ind_arg])){
+            return TRUE;
+    }else{
+            printf("Endereco nao alocado para vetor na linha %d\n",contador_linha);
+            total_erros++;
+    }
+    return FALSE;
+}
+int argumentos_copy_corretos(TabelaDeDiretivas* buscador, short int* indices, short int* end_base){
+    if(endereco_alocado(buscador,indices,0)){
+        buscador = busca_end_incial(Tab_Dir,end_base[1]);
+        if(buscador!=NULL)// existe o segundo argumento
+            return endereco_acesso_memoria_valido(buscador,indices,1);
+        else
+            return FALSE;
+    }else{
+        return FALSE;
+    }
+}
+int endereco_stop_correto(int endereco){
+    if(endereco==-2){//flag para indicar que nao foi dado argumento para stop
+        return TRUE;
+    }else{
+        printf("Instrucao stop com argumentos na linha %d\n",contador_linha);
+        total_erros++;
+        return FALSE;
+    }
+}
+int divide_zero(TabelaDeDiretivas* buscador){
+    return(buscador->tipo=='C' && buscador->valor==0);
+}
+int pulo_valido(int endereco_total){
+    if(endereco_dados!=-1){
+        return endereco_total<endereco_dados;
+    }else{
+        return TRUE;// se nao ha secao de dados, entao todo codigo eh secao texto
+    }
 }

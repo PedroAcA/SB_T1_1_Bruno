@@ -164,7 +164,7 @@ void analisa_equivalencias(FILE* arq, TabelaEQU* tabela){
 void remove_diretivas(FILE* arq){
     FILE* arq2 = fopen("temp3.pre","w");
     char linha[100],token[50], token2[50];
-
+    int numero_linha = 0;
 
     while(!feof(arq)){ //ENQUANTO NAO ALCANCAR O FIM DO ARQUIVO
         fgets(linha,100,arq); //PEGA LINHA POR LINHA
@@ -207,6 +207,5 @@ void remove_diretivas(FILE* arq){
         limpa(token2,50);
 
     }
-
     fclose(arq2);
 }

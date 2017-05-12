@@ -1,6 +1,6 @@
 
-;Programa que transforma um nÃºmero decimal
-;a binÃ¡rio
+;Programa que transforma um número decimal
+;a binário
 SECTION TEXT
 INPUT OLD_DATA
 LOAD OLD_DATA
@@ -12,7 +12,7 @@ LOAD OLD_DATA
 SUB TMP_DATA
 STORE TMP_DATA
 OUTPUT TMP_DATA
-COPY NEW_DATA,OLD_DATA
+COPY NEW_DATA, OLD_DATA
 LOAD OLD_DATA
 JMPP L1
 STOP
