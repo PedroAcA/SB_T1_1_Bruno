@@ -139,7 +139,7 @@ void analisa_equivalencias(FILE* arq, TabelaEQU* tabela){
         if(( c=fgetc(arq) ) == '\n'){ //SE A LINHA FOR VAZIA, COPIA ELA NO ARQUIVO
             fprintf(arq2,"\n");
         }
-        else{// SE A LINHA TIVER CODIGO
+        else if(c!=EOF){// SE A LINHA TIVER CODIGO
             fseek(arq,ftell(arq)-sizeof(char),SEEK_SET);
             fscanf(arq,"%s",token); //PEGA UMA PALAVRA
             c= fgetc(arq);// PEGA O ESPAÇO OU \N SUBSEQUENTE
