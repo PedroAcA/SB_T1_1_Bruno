@@ -56,32 +56,27 @@ void liga(FILE* arq, FILE* arq2, FILE* arq3,char* nome_arq){
 		}
 	}
 
-	//VERIFICA SIMBOLOS INDEFINIDOS OU REDEFINICOES E CRIA TABELA DE DEFINICOES GLOBAL
+	//SE NAOHA SIMBOLOS INDEFINIDOS NEM REDEFINICOES
 	if ((AnalisaIndefinicoes(TabelaUso1,TabelaUso2,TabelaUso3,TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3) == SUCESSO) && (AnalisaRedefinicoes(TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3) == SUCESSO)){
-		TabelaGlobal = CriaGlobal(TabelaGlobal,TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3);
-		printf("\nPARABENS CHAMPS\n");
 		
+		//CRIA TABELA DE DEFINICOES GLOBAL
+		TabelaGlobal = CriaGlobal(TabelaGlobal,TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3);
+
+		//RESOLVE OS CONFLITOS CRUZADOS
 		Codigo1 = ResolveConflitosCruzados(Codigo1,TabelaUso1,TabelaGlobal);
 		Codigo2 = ResolveConflitosCruzados(Codigo2,TabelaUso2,TabelaGlobal);
 		Codigo3 = ResolveConflitosCruzados(Codigo3,TabelaUso3,TabelaGlobal);
 
+		//REALOCA OS DADOS RELATIVOS QUE AINDA NAO FORAM RESOLVIDOS
 		Codigo2 = RealocaRelativos(Codigo2,TabelaRelocacao2,fc2);
 		Codigo3 = RealocaRelativos(Codigo3,TabelaRelocacao3,fc3);
 
+		//ABRE O ARQUIVO DE SAIDA E IMPRIME O CODIGO
 		FILE* arq4 = fopen(nome_arq,"w");
-
 		ImprimirCoidgo(Codigo1,Codigo2,Codigo3,arq4);
-
 		fclose(arq4);
 
 	}
-
-	//TODO: RESOLVER OS CONFLITOS CRUZADOS E REALOCAR O RESTANTE DO CODIGO
-
-	
-
-	
-
 }
 
 Tabela* InsereTabela (Tabela* tabela, char nome[], int valor ){ //INSERE UMA INFORMACAO NUMA TABELA DE DEFINICOES OU USO
@@ -93,7 +88,7 @@ Tabela* InsereTabela (Tabela* tabela, char nome[], int valor ){ //INSERE UMA INF
     return tabela;
 }
 
-Relocacao* InsereRelocacao (Relocacao* tabela, int byte ){ //INSERE UMA INFORMACAO NUMA TABELA DE RELOCACAO
+Relocacao* InsereRelocacao (Relocacao* tabela, int byte ){ //INSERE UMA INFORMACAO NO FINAL DA TABELA DE RELOCACAO
     Relocacao *p = tabela;
     Relocacao * novo = (Relocacao*) malloc(sizeof(Relocacao));
     novo->byte = byte;
@@ -109,7 +104,7 @@ Relocacao* InsereRelocacao (Relocacao* tabela, int byte ){ //INSERE UMA INFORMAC
     return tabela;
 }
 
-Codigo* InsereCodigo (Codigo* tabela, int byte, int info ){ //INSERE UMA INFORMACAO NUMA TABELA DE CODIGOS
+Codigo* InsereCodigo (Codigo* tabela, int byte, int info ){ //INSERE UMA INFORMACAO NO FINAL DA TABELA DE CODIGOS
     Codigo *p = tabela;
     Codigo * novo = (Codigo*) malloc(sizeof(Codigo));
     novo->byte = byte;
@@ -188,7 +183,6 @@ Relocacao* CriaRelocacao (Relocacao* TabelaRelocacao, FILE* arq){ //CRIA A TABEL
 	//	printf("%d ",p->byte);
 	//}	
 
-
 	return TabelaRelocacao;
 }
 
@@ -248,7 +242,7 @@ int AnalisaIndefinicoes(Tabela* TabelaUso1,Tabela* TabelaUso2,Tabela *TabelaUso3
 	int erros = 0;
 	Tabela* p;
 
-	for(p = TabelaUso1; p!=NULL; p=p->prox){
+	for(p = TabelaUso1; p!=NULL; p=p->prox){ 
 		if ( !(EstaNa(p->nome,TabelaDefinicoes2)) && (TabelaUso3 == NULL) ){
 			printf("Erro de ligacao: Simbolo %s nao encontrado.\n",p->nome);
 			erros++;
@@ -312,6 +306,7 @@ int AnalisaRedefinicoes(Tabela *TabelaDefinicoes1,Tabela* TabelaDefinicoes2,Tabe
 		return FALHA;
 }
 
+//CRIA A TABELA DE DEFINICOES GLOBAL A PARTIR DAS TABELAS DE DEFINICOES DE TODOS OS ARQUIVOS
 Tabela* CriaGlobal (Tabela* TabelaGlobal, Tabela* TabelaDefinicoes1,Tabela* TabelaDefinicoes2,Tabela* TabelaDefinicoes3){
 	Tabela *p;
 	for (p = TabelaDefinicoes1; p!=NULL; p=p->prox){
@@ -327,6 +322,7 @@ Tabela* CriaGlobal (Tabela* TabelaGlobal, Tabela* TabelaDefinicoes1,Tabela* Tabe
 	return TabelaGlobal;
 }
 
+//IMPRIME O CODIGO NO ARQUIVO DE SAIDA
 void ImprimirCoidgo(Codigo* Codigo1,Codigo* Codigo2,Codigo* Codigo3,FILE* arq){
 	Codigo *p;
 	for(p = Codigo1; p!=NULL; p=p->prox){
@@ -349,6 +345,7 @@ void ImprimirCoidgo(Codigo* Codigo1,Codigo* Codigo2,Codigo* Codigo3,FILE* arq){
 	}
 }
 
+//VERIFICA PARA CADA ITEM NA TABELA DE DEFINICOES GLOBAL, ONDE FOI USADO E SUBSTITUI OS VALORES
 Codigo* ResolveConflitosCruzados(Codigo* codigo,Tabela* TabelaUso, Tabela* TabelaGlobal){
 	Codigo *c;
 	Tabela *u,*g;
@@ -371,6 +368,7 @@ Codigo* ResolveConflitosCruzados(Codigo* codigo,Tabela* TabelaUso, Tabela* Tabel
 	return codigo;
 }
 
+//APLICA O FATOR DE CORRECAO AOS ELEMTNOS QUE AINDA NAO FORAM REALLOCADOS
 Codigo* RealocaRelativos(Codigo* codigo, Relocacao* tabela, int fc){
 	Codigo *c;
 	Relocacao *r;
@@ -391,6 +389,7 @@ Codigo* RealocaRelativos(Codigo* codigo, Relocacao* tabela, int fc){
 	return codigo;
 }
 
+//COPIA O ARQUIVO OBJETO NO ARQUIVO DE SAIDA
 void copia (FILE* arq, char* nome_arq){
 	char c;
 
