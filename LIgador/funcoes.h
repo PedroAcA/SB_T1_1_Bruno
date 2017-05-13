@@ -36,4 +36,6 @@ int EstaNa (char[],Tabela*);
 int AnalisaIndefinicoes(Tabela*,Tabela*,Tabela*,Tabela*,Tabela*,Tabela*);
 int AnalisaRedefinicoes(Tabela*,Tabela*,Tabela*);
 Tabela* CriaGlobal (Tabela*,Tabela*,Tabela*,Tabela*);
-void ImprimirCoidgo(Codigo*,Codigo*,Codigo*);
+void ImprimirCoidgo(Codigo*,Codigo*,Codigo*, FILE*);
+Codigo* ResolveConflitosCruzados(Codigo*,Tabela*, Tabela*);
+Codigo* RealocaRelativos(Codigo*, Relocacao*, int);

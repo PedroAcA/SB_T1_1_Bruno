@@ -1,25 +1,25 @@
 #include "funcoes.h"
 
 void liga(FILE* arq, FILE* arq2, FILE* arq3,char* nome_arq){
-	FILE* arq4 = fopen(nome_arq,"w");
+	
 	char c;
 	char nome[50];
 	int valor, fc2, fc3, erros = 0;
 	Tabela *TabelaUso1 = NULL, *TabelaUso2=NULL, *TabelaDefinicoes1=NULL, *TabelaDefinicoes2 = NULL, *TabelaUso3=NULL, *TabelaDefinicoes3=NULL, *TabelaGlobal = NULL,*p;
-	Relocacao* TabelaRelocacao1 = NULL, *TabelaRelocacao2 = NULL, *TabelaRelocacao3 = NULL;
+	Relocacao* TabelaRelocacao1 = NULL, *TabelaRelocacao2 = NULL, *TabelaRelocacao3 = NULL,*r;
 	Codigo* Codigo1 = NULL, *Codigo2 = NULL, *Codigo3 = NULL, *q;
 
 	//COLOCA TODAS AS INFORMACOES DO PRIMEIRO ARQUIVO OBJETO EM MEMORIA
+	Codigo1 = CriaCodigo (Codigo1, arq);
 	TabelaUso1 = CriaUso(TabelaUso1,arq);
 	TabelaDefinicoes1 = CriaDefinicoes(TabelaDefinicoes1,arq);
 	TabelaRelocacao1 = CriaRelocacao(TabelaRelocacao1, arq);
-	Codigo1 = CriaCodigo (Codigo1, arq);
 
 	//COLOCA TODAS AS INFORMACOES DO SEGUNDO ARQUIVO OBJETO EM MEMORIA E APLICA FATOR DE CORRECAO
+	Codigo2 = CriaCodigo (Codigo2, arq2);
 	TabelaUso2 = CriaUso(TabelaUso2,arq2);
 	TabelaDefinicoes2 = CriaDefinicoes(TabelaDefinicoes2,arq2);
 	TabelaRelocacao2 = CriaRelocacao(TabelaRelocacao2, arq2); 
-	Codigo2 = CriaCodigo (Codigo2, arq2);
 	fc2 = tamanho(Codigo1) +1;
 	for (q = Codigo2; q!=NULL; q=q->prox){
 		q->byte = q->byte+fc2;
@@ -27,13 +27,20 @@ void liga(FILE* arq, FILE* arq2, FILE* arq3,char* nome_arq){
 	for(p = TabelaDefinicoes2;p!=NULL;p=p->prox){
 		p->valor = p->valor+fc2;
 	}
+	for(p = TabelaUso2;p!=NULL;p=p->prox){
+		p->valor = p->valor+fc2;
+	}
+	for(r = TabelaRelocacao2;r!=NULL;r=r->prox){
+		r->byte = r->byte + fc2;
+	}
+
 
 	//SE EXISTE ARQUIVO OBJETO 3
 	if(arq3!=NULL){ //COLOCA TODAS AS INFORMACOES DO TERCEIRO ARQUIVO OBJETO EM MEMORIA E APLICA FATOR DE CORRECAO
+		Codigo3 = CriaCodigo (Codigo3, arq3);
 		TabelaUso3 = CriaUso(TabelaUso3,arq3);
 		TabelaDefinicoes3 = CriaDefinicoes(TabelaDefinicoes3,arq3);
 		TabelaRelocacao3 = CriaRelocacao(TabelaRelocacao3, arq3);
-		Codigo3 = CriaCodigo (Codigo3, arq3);
 		fc3 = fc2 + tamanho(Codigo2) + 1;
 		for (q = Codigo3; q!=NULL; q=q->prox){
 			q->byte = q->byte+fc3;
@@ -41,20 +48,39 @@ void liga(FILE* arq, FILE* arq2, FILE* arq3,char* nome_arq){
 		for(p = TabelaDefinicoes3;p!=NULL;p=p->prox){
 			p->valor = p->valor+fc3;
 		}
+		for(p = TabelaUso3;p!=NULL;p=p->prox){
+			p->valor = p->valor+fc3;
+		}
+		for(r = TabelaRelocacao3;r!=NULL;r=r->prox){
+			r->byte = r->byte+fc3;
+		}
 	}
 
 	//VERIFICA SIMBOLOS INDEFINIDOS OU REDEFINICOES E CRIA TABELA DE DEFINICOES GLOBAL
 	if ((AnalisaIndefinicoes(TabelaUso1,TabelaUso2,TabelaUso3,TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3) == SUCESSO) && (AnalisaRedefinicoes(TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3) == SUCESSO)){
 		TabelaGlobal = CriaGlobal(TabelaGlobal,TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3);
 		printf("\nPARABENS CHAMPS\n");
+		
+		Codigo1 = ResolveConflitosCruzados(Codigo1,TabelaUso1,TabelaGlobal);
+		Codigo2 = ResolveConflitosCruzados(Codigo2,TabelaUso2,TabelaGlobal);
+		Codigo3 = ResolveConflitosCruzados(Codigo3,TabelaUso3,TabelaGlobal);
+
+		Codigo2 = RealocaRelativos(Codigo2,TabelaRelocacao2,fc2);
+		Codigo3 = RealocaRelativos(Codigo3,TabelaRelocacao3,fc3);
+
+		FILE* arq4 = fopen(nome_arq,"w");
+
+		ImprimirCoidgo(Codigo1,Codigo2,Codigo3,arq4);
+
+		fclose(arq4);
+
 	}
 
 	//TODO: RESOLVER OS CONFLITOS CRUZADOS E REALOCAR O RESTANTE DO CODIGO
 
 	
-	ImprimirCoidgo(Codigo1,Codigo2,Codigo3);
 
-	fclose(arq4);
+	
 
 }
 
@@ -149,43 +175,46 @@ Tabela* CriaDefinicoes (Tabela* TabelaDefinicoes, FILE* arq){ //CRIA A TABELA DE
 }
 
 Relocacao* CriaRelocacao (Relocacao* TabelaRelocacao, FILE* arq){ //CRIA A TABELA DE RELOCACAO A PARTIR DE UM ARQUIVO
-	char nome[50];
 	int valor;
-	char c;
 	Relocacao *p;
 
-	do{
+	while(!feof(arq)){
 		fscanf(arq,"%d",&valor);			
-		fscanf(arq,"%c",&c);
 		//printf("%d ",valor);
 		TabelaRelocacao = InsereRelocacao(TabelaRelocacao, valor);
-	}while (c!='\n');
+	}
 
 	//for(p = TabelaRelocacao;p!=NULL;p=p->prox){
 	//	printf("%d ",p->byte);
 	//}	
 
-	fscanf(arq,"%s",nome); //PEGA O CODE
 
 	return TabelaRelocacao;
 }
 
 Codigo* CriaCodigo(Codigo* codigo, FILE* arq){ //CRIA UMA TABELA COM O CODIGO A PARTIR DE UM ARQUIVO
 	int valor, byte=0;
+	char nome[50],c;
 	Codigo* p;
 
+	fgets(nome,50,arq);//PEGA O CODE
 
-	while(!feof(arq)){
-			fscanf(arq,"%d",&valor);			
-			//printf("%d ",valor);
-			codigo = InsereCodigo(codigo, byte, valor);
-			byte++;
-		}
+	
+	do{
+		fscanf(arq,"%d",&valor);
+		fscanf(arq,"%c",&c);			
+		//printf("%d ",valor);
+		codigo = InsereCodigo(codigo, byte, valor);
+		byte++;
+	}while(c!='\n');
+
+
 
 	//for(p = codigo;p!=NULL;p=p->prox){
 	//	printf("byte: %d, valor: %d\n",p->byte,p->info);
 	//}
 		
+	fgets(nome,50,arq);//PEGA O \n
 
 	return codigo;
 
@@ -298,17 +327,66 @@ Tabela* CriaGlobal (Tabela* TabelaGlobal, Tabela* TabelaDefinicoes1,Tabela* Tabe
 	return TabelaGlobal;
 }
 
-void ImprimirCoidgo(Codigo* Codigo1,Codigo* Codigo2,Codigo* Codigo3){
+void ImprimirCoidgo(Codigo* Codigo1,Codigo* Codigo2,Codigo* Codigo3,FILE* arq){
 	Codigo *p;
 	for(p = Codigo1; p!=NULL; p=p->prox){
 		printf("Byte: %d: %d\n",p->byte,p->info);
+		fprintf(arq, "%d ", p->info);
 	}
 
 	for(p = Codigo2; p!=NULL; p=p->prox){
 		printf("Byte: %d: %d\n",p->byte,p->info);
+		fprintf(arq, "%d", p->info);
+		if(p->prox != NULL || Codigo3 != NULL)
+			fprintf(arq, " ");
 	}
 
 	for(p = Codigo3; p!=NULL; p=p->prox){
 		printf("Byte: %d: %d\n",p->byte,p->info);
+		fprintf(arq, "%d", p->info);
+		if(p->prox != NULL)
+			fprintf(arq, " ");
 	}
+}
+
+Codigo* ResolveConflitosCruzados(Codigo* codigo,Tabela* TabelaUso, Tabela* TabelaGlobal){
+	Codigo *c;
+	Tabela *u,*g;
+
+	for (u= TabelaUso; u!=NULL; u=u->prox){
+		c = codigo; 
+		while(u->valor != c->byte){
+			c = c->prox;
+		}
+
+		g=TabelaGlobal;
+		while(strcmp(g->nome,u->nome)!=0){
+			g = g->prox;
+		}
+
+		c->info = c->info + g->valor;
+		c->relocado = 1;
+	}
+
+	return codigo;
+}
+
+Codigo* RealocaRelativos(Codigo* codigo, Relocacao* tabela, int fc){
+	Codigo *c;
+	Relocacao *r;
+
+	if(codigo!=NULL){
+		for(r = tabela; r!= NULL; r=r->prox){
+			c = codigo;
+			while(r->byte != c->byte){
+				c = c->prox;
+			}
+
+			if(c->relocado == 0){
+				c->info = c->info + fc;
+			}
+		}
+	}
+
+	return codigo;
 }
