@@ -1,6 +1,5 @@
-#define TRUE 1
 #define FALSE 0
-
+#define TRUE !(FALSE)
 typedef struct EQU{
     char nome[50];
     char equivalencia[50];
