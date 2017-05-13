@@ -11,10 +11,14 @@
 #include"pre_processador.h"
 #include"parser.h"
 #include "parser2.h"
+/*a variavel rotulos_linha indica quantos rotulos existem por linha
+(possibilita detectar o erro de mais de um rótulo por linha)
+*/
+
 short int *indice_realocacao;
 int contador_linha,rotulos_linha,tamanho_realoc;
 short int contador_posicao;
-int passagem,total_erros,fechou_begin_end,endereco_dados;
+int passagem,total_erros,fechou_begin_end,endereco_dados,tem_begin,tem_stop;
 TabelaDeInstrucoes* Instrucoes;
 TabelaDeSimbolos* TS;
 TabelaDeDiretivas* Tab_Dir;

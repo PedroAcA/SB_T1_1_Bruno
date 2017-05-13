@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1494619750 source:/home/paca/SB_T1_1_Bruno/Montador/arquivos.c
+1494636188 source:/home/paca/SB_T1_1_Bruno/Montador/arquivos.c
 	"bibliotecas_montador.h"
 
-1494626178 /home/paca/SB_T1_1_Bruno/Montador/bibliotecas_montador.h
+1494631663 /home/paca/SB_T1_1_Bruno/Montador/bibliotecas_montador.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -14,14 +14,14 @@
 	"parser.h"
 	"parser2.h"
 
-1494532322 /home/paca/SB_T1_1_Bruno/Montador/scanner.h
+1494628809 /home/paca/SB_T1_1_Bruno/Montador/scanner.h
 
 1494620025 /home/paca/SB_T1_1_Bruno/Montador/arquivos.h
 
-1494626250 source:/home/paca/SB_T1_1_Bruno/Montador/montador.c
+1494634922 source:/home/paca/SB_T1_1_Bruno/Montador/montador.c
 	"bibliotecas_montador.h"
 
-1494532279 source:/home/paca/SB_T1_1_Bruno/Montador/scanner.c
+1494633896 source:/home/paca/SB_T1_1_Bruno/Montador/scanner.c
 	"bibliotecas_montador.h"
 	<errno.h>
 	<limits.h>
@@ -49,7 +49,7 @@
 1493428350 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\scanner.c
 	"bibliotecas_montador.h"
 
-1494453299 /home/paca/SB_T1_1_Bruno/Montador/pre_processador.h
+1494628690 /home/paca/SB_T1_1_Bruno/Montador/pre_processador.h
 
 1494616711 source:/home/paca/SB_T1_1_Bruno/Montador/pre_processador.c
 	"bibliotecas_montador.h"
@@ -64,21 +64,19 @@
 1493428350 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\tabelas.c
 	"bibliotecas_montador.h"
 
-1494618402 /home/paca/SB_T1_1_Bruno/Montador/tabelas.h
+1494634122 /home/paca/SB_T1_1_Bruno/Montador/tabelas.h
 
-1494203362 /home/paca/SB_T1_1_Bruno/Montador/parser.h
+1494632500 /home/paca/SB_T1_1_Bruno/Montador/parser.h
 
-1494602056 source:/home/paca/SB_T1_1_Bruno/Montador/tabelas.c
+1494634240 source:/home/paca/SB_T1_1_Bruno/Montador/tabelas.c
 	"bibliotecas_montador.h"
 
-1494626263 source:/home/paca/SB_T1_1_Bruno/Montador/parser.c
+1494635930 source:/home/paca/SB_T1_1_Bruno/Montador/parser.c
 	"bibliotecas_montador.h"
-	<errno.h>
-	<limits.h>
 
 1494553517 /home/paca/SB_T1_1_Bruno/Montador/parser2.h
 
-1494606711 source:/home/paca/SB_T1_1_Bruno/Montador/parser2.c
+1494633975 source:/home/paca/SB_T1_1_Bruno/Montador/parser2.c
 	"bibliotecas_montador.h"
 	<errno.h>
 	<limits.h>

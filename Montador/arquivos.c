@@ -5,7 +5,7 @@ int existe_arquivo(FILE* arq){
 }
 void cria_arq_obj(){
     obj = fopen("teste1.o","w+");
-    if(obj!=NULL)
+    if(obj!=NULL && tem_begin)
         fprintf(obj,"CODE\n");
 }
 void exclui_arq_obj(){
@@ -16,11 +16,11 @@ void exclui_arq_obj(){
 void escreve_instrucao(TabelaDeInstrucoes *instrucao_atual,short int* args){
     if(obj!=NULL){
         if(strcmp(instrucao_atual->mnemonico,"copy")==0 ){
-            fprintf(obj,"%d %d %d ",(int)instrucao_atual->opcode,(int)args[0],(int)args[1]);
+            fprintf(obj," %d %d %d",(int)instrucao_atual->opcode,(int)args[0],(int)args[1]);
         }else if(strcmp(instrucao_atual->mnemonico,"stop")==0){
-            fprintf(obj,"%d ",(int)instrucao_atual->opcode);
+            fprintf(obj," %d",(int)instrucao_atual->opcode);
         }else{
-            fprintf(obj,"%d %d ",(int)instrucao_atual->opcode,(int)args[0]);
+            fprintf(obj," %d %d",(int)instrucao_atual->opcode,(int)args[0]);
         }
     }
 }
@@ -29,9 +29,9 @@ void escreve_diretiva(char tipo, short int valor){
     if(obj!=NULL){
         if(tipo == 'E'){
             for(i=0;i<valor;i++)
-                fprintf(obj,"%d ",0);
+                fprintf(obj," %d",0);
         }else if(tipo== 'C'){
-            fprintf(obj,"%d ",valor);
+            fprintf(obj," %d",valor);
         }
     }
 }

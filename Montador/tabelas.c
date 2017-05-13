@@ -1,20 +1,22 @@
 #include"bibliotecas_montador.h"
-TabelaDeObjetos *Inicio=NULL,*Fim=NULL;// ponteiros internos para criar a fila de codigo objeto
+//TabelaDeObjetos *Inicio=NULL,*Fim=NULL;// ponteiros internos para criar a fila de codigo objeto
                              // assim, é possivel escrever as tabelas e o codigo
                              // objeto na ordem em que aparecem
 void * CriaTabela(){
     return NULL;
 }
-
+//a funcao InsereSimbolo insere simbolos nao Externos.
+// Para inserir simbolos externos a funcao InsereSimbolo_Externo foi criada
 TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos* tabela, char nome[],short int valor){
     TabelaDeSimbolos * novo = (TabelaDeSimbolos*) calloc(1,sizeof(TabelaDeSimbolos));
     strcpy(novo->nome, nome);
     novo->valor = valor;
     novo->prox = tabela;
+    novo->externo = 'n';
     tabela = novo;
     return novo;
 }
-TabelaDeSimbolos* existe_simbolo(TabelaDeSimbolos* tabela,char* simb){
+TabelaDeSimbolos* busca_simbolo(TabelaDeSimbolos* tabela,char* simb){
     while(tabela!=NULL){
         if(strcmp(tabela->nome,simb)==0){//achou simbolo na tabela de simbolos
             return tabela;
@@ -63,6 +65,20 @@ TabelaDeInstrucoes* busca_instrucao(TabelaDeInstrucoes* tabela_instrucoes,char* 
     }
     return NULL;
 }
+/*A funcao busca_incrementa_posicao busca se a instrucao eh valida e, se for,
+  atualiza o contador_posicao. Retorna TRUE(definido em pre_processador.h)
+  se instrucao for valida ou FALSE (definido em pre_processador.h) caso
+  contrario*/
+TabelaDeInstrucoes* busca_incrementa_posicao(char*tok){
+    // a funcao busca_instrucao esta definida em tabelas.c
+    // a tabela de instrucoes esta declarada em bibliotecas_montador.h
+    TabelaDeInstrucoes* buscador = busca_instrucao(Instrucoes,tok);// endereco de onde esta a instrucao na tabela de instrucoes (se esta existir)
+    if(buscador!=NULL){
+        contador_posicao+= buscador->tamanho;
+    }
+    return buscador;
+}
+
 TabelaDeDiretivas* insereDiretiva(TabelaDeDiretivas* Dir,int posicao_memoria,char tipo,int valor){
     TabelaDeDiretivas* novo = (TabelaDeDiretivas*)malloc(sizeof(TabelaDeDiretivas));
     if(novo==NULL){
@@ -84,6 +100,31 @@ TabelaDeDiretivas* busca_end_incial(TabelaDeDiretivas* Diretivas, int end_base){
         Diretivas = Diretivas->prox;
     }
     return Diretivas;
+}
+
+void libera_tabela_instrucoes(TabelaDeInstrucoes* ins){
+    TabelaDeInstrucoes* aux;
+    while(ins!=NULL){
+        aux = ins->prox;
+        free(ins);
+        ins = aux;
+    }
+}
+void libera_tabela_simbolos(TabelaDeSimbolos* s){
+    TabelaDeSimbolos* aux;
+    while(s!=NULL){
+        aux = s->prox;
+        free(s);
+        s = aux;
+    }
+}
+void libera_tabela_diretivas(TabelaDeDiretivas* d){
+    TabelaDeDiretivas* aux;
+    while(d!=NULL){
+        aux = d->prox;
+        free(d);
+        d = aux;
+    }
 }
 /*
 void Insere_Codigo_Objeto_Instr(TabelaDeInstrucoes* instrucao,short int* args){
@@ -138,27 +179,3 @@ void desaloca_Tabela_Objetos(){
     }
 }
 */
-void libera_tabela_instrucoes(TabelaDeInstrucoes* ins){
-    TabelaDeInstrucoes* aux;
-    while(ins!=NULL){
-        aux = ins->prox;
-        free(ins);
-        ins = aux;
-    }
-}
-void libera_tabela_simbolos(TabelaDeSimbolos* s){
-    TabelaDeSimbolos* aux;
-    while(s!=NULL){
-        aux = s->prox;
-        free(s);
-        s = aux;
-    }
-}
-void libera_tabela_diretivas(TabelaDeDiretivas* d){
-    TabelaDeDiretivas* aux;
-    while(d!=NULL){
-        aux = d->prox;
-        free(d);
-        d = aux;
-    }
-}

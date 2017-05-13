@@ -63,6 +63,10 @@ short int converte_em_num(char* copia_tok,short int numero){
     }
     return numero;
 }
+int existe_erro_conversao(long int numero, char*tok,char*aux_erro,int erno){
+    return (aux_erro == tok || *aux_erro!= '\0' ||
+            ((numero == LONG_MIN || numero == LONG_MAX) && erno == ERANGE));
+}
 int tem_aritmetica(char* tok){
     return(strchr(tok,'+')!=NULL);
 }
@@ -78,7 +82,7 @@ int converte_exp_aritmetica(char* tok,short int* indice_vetor,char *tem_extern){
     copia_tok = elimina_caracter(copia_tok,"+");
     copia_tok =strtok_r(copia_tok," ",&end_tok);// como houve experessoes como v+1, tem q retokenizar a string
     if(existe_token(copia_tok)){//inicio da avaliacao do rotulo
-            buscador = existe_simbolo(TS,copia_tok);
+            buscador = busca_simbolo(TS,copia_tok);
         if(buscador!=NULL){
             //if(buscador->externo == 's')
                 //*tem_extern='T';

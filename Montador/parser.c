@@ -1,12 +1,6 @@
 #include"bibliotecas_montador.h"
-#include <errno.h>//usada para identificar erros de conversao erros ao usar a funcao strtol
-#include <limits.h>//usada para identificar erros de conversao erros ao usar a funcao strtol
-//#define FALSE 0
-//#define TRUE !(FALSE)
-/*a variavel rotulos_linha indica quantos rotulos existem por linha
-(possibilita detectar o erro de mais de um rótulo por linha)
-*/
-
+//#include <errno.h>//usada para identificar erros de conversao erros ao usar a funcao strtol
+//#include <limits.h>//usada para identificar erros de conversao erros ao usar a funcao strtol
 void verifica_linhas(FILE* arq){
     int continua_busca_token;
     char *linha,*token;
@@ -65,6 +59,8 @@ int existe_rotulo(char * tok){
             if(tam_string(tok)>51){// 50 caracteres de nome de variavel + 1 para ':'
                 printf("\nRotulo %s com mais de 50 caracteres\n",tok);
                 total_erros++;
+            }else if(strpbrk(tok,"';!@#$%&*()-+={[}]?/°>.<,|\\  */")!=NULL){//ha um caracter invaliido
+                printf("\nCaracteres invalidos no rotulo presente na linha %d\n",contador_linha);
             }else{
             //   printf("Analisando rotulos\n");
                 if(eh_numero(tok[0])){
@@ -81,12 +77,13 @@ int eh_numero(char c){
     return (c>='0' && c<='9');
 }
 void busca_primeira_passagem(char* tok){
+
     rotulos_linha++;// o montador so precisa verificar se ha mais de um simbolo
                     // por linha na primeira passagem. Se houver, um erro
                     // eh registrado e a segunda passagem nao ocorre.
     if(rotulos_linha<2){
         tok[tam_string(tok)-1] = '\0';// tira os 2 pontos do token que eh rotulo
-        if(existe_simbolo(TS,tok)==NULL){//existe_simbolo() vai buscar o endereco do delemnto da tabeladesimbolos que tem o token. Se na ha tal elemento, retona NULL
+        if(busca_simbolo(TS,tok)==NULL){//existe_simbolo() vai buscar o endereco do delemnto da tabeladesimbolos que tem o token. Se na ha tal elemento, retona NULL
           //  printf("\nInserindo %s na tabela de simbolos\n",tok);
             TS = InsereSimbolo(TS,tok,contador_posicao);
         }else{
@@ -98,7 +95,6 @@ void busca_primeira_passagem(char* tok){
         total_erros++;
     }
 }
-
 int existe_instrucao(char *tok){
     TabelaDeInstrucoes* instrucao_atual = busca_incrementa_posicao(tok);
     short int endereco_args[2],indice_vetor[2];//endereco_args= lista dos enderecos de memoria dos argumentos presentes na linha analisada
@@ -125,30 +121,11 @@ int existe_instrucao(char *tok){
     }
     return FALSE;
 }
-/*A funcao incrementa_posicao busca se a instrucao eh valida e, se for,
-  atualiza o contador_posicao. Retorna TRUE(definido em pre_processador.h)
-  se instrucao for valida ou FALSE (definido em pre_processador.h) caso
-  contrario*/
-TabelaDeInstrucoes* busca_incrementa_posicao(char*tok){
-    // a funcao busca_instrucao esta definida em tabelas.c
-    // a tabela de instrucoes esta declarada em bibliotecas_montador.h
-    TabelaDeInstrucoes* buscador = busca_instrucao(Instrucoes,tok);// endereco de onde esta a instrucao na tabela de instrucoes (se esta existir)
-    if(buscador!=NULL){
-        contador_posicao+= buscador->tamanho;
-    }
-    return buscador;
-}
 int existe_diretiva(char *tok){
     short int numero=0;//guarda informacoes da constante da diretiva CONST ou numero de espacos da diretiva space
-    if(strcmp(tok,"section")==0){//avalia diretivas section somente uma vez (na primeira passagem)
+    if(strcmp(tok,"section")==0 && passagem==1){//avalia diretivas section somente uma vez (na primeira passagem)
         tok = prox_token();
-        if(strcmp(tok,"data")==0){//secao de dados
-            endereco_dados = contador_posicao;// manter o endereco inical da secao de dados possibilita saber se ha pulos
-                                              //para secao indevida
-        }else if(strcmp(tok,"text")!=0){// a diretiva eh section, mas os argumentos nao sao data ou text
-            printf("\nArgumentos da diretiva section invalidos na linha %d (diretiva section aceita somente text ou data como argumentos)\n",contador_linha);
-            total_erros++;
-        }
+        avalia_argumentos_section(tok);
         tok = prox_token();
         if(existe_token(tok)){//diretiva section tem mais de um operando. Entao erro
             printf("\nDiretiva section tem mais de um argumento na linha %d \n",contador_linha);
@@ -157,34 +134,35 @@ int existe_diretiva(char *tok){
         return TRUE;
     }else if(strcmp(tok,"space")==0){
         tok = prox_token();
-        if(existe_token(tok)){
-            numero= converte_em_num(tok,numero);
-            if(numero>=0){
-                Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'E',numero);
-                contador_posicao+=numero;
+         numero = diretiva_space_primeira_passagem(tok,numero);
+        if(passagem==1){
+            if(contador_posicao>=endereco_dados && endereco_dados!=-1){// endereco_dados ==-1 signifca que nao existe section data
+                if(existe_token(prox_token())){
+                    printf("\nNumero incorreto de argumentos para a diretiva space na linha %d\n",contador_linha);
+                    total_erros++;
+                }
             }else{
-                printf("\nTotal de espacos a alocar menor que 0 ou erro na constante numerica na linha %d\n",contador_linha);
+                printf("\nDiretiva space foi declarada antes da secao de dados (section data) na linha %d\n",contador_linha);
                 total_erros++;
             }
-        }else{
-            numero=1;
-            Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'E',1);
-            contador_posicao++;
-        }
-        if(passagem==2)
+        }else if(passagem==2)
             escreve_diretiva('E',numero);
+
         return TRUE;
     }else if(strcmp(tok,"const")==0){
         tok = prox_token();
-        if(existe_token(tok)){
-            numero = converte_em_num(tok,numero);
-            Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'C',numero);
-            contador_posicao++;
-        }else{
-            printf("\nDiretiva const sem constante numerica na linha %d",contador_linha);
-            total_erros++;
-        }
-        if(passagem==2)
+        numero = diretiva_const_primeira_passagem(tok,numero);
+        if(passagem==1){
+            if(contador_posicao>=endereco_dados && endereco_dados!=-1){// endereco_dados ==-1 signifca que nao existe section data
+                if(existe_token(prox_token())){
+                    printf("\nNumero incorreto de argumentos para a diretiva const na linha %d\n",contador_linha);
+                    total_erros++;
+                }
+            }else{
+                printf("\nDiretiva const foi declarada antes da secao de dados (section data) na linha %d\n",contador_linha);
+                total_erros++;
+            }
+        }else if(passagem==2)
             escreve_diretiva('C',numero);
 
         return TRUE;
@@ -192,16 +170,63 @@ int existe_diretiva(char *tok){
         return TRUE;
     }else if(strcmp(tok,"extern")==0){
         return TRUE;
-    }else if(strcmp(tok,"begin")==0){
-        fechou_begin_end = FALSE;
+    }else if(strcmp(tok,"begin")==0 && passagem==1){
+        fechou_begin_end = !fechou_begin_end;
+        tem_begin = TRUE;
+        if(contador_posicao!=0){
+            printf("\nDiretiva begin declarada em lugar invalido na linha %d\n",contador_linha);
+            total_erros++;
+        }
         return TRUE;
-    }else if(strcmp(tok,"end")==0){
-        fechou_begin_end = TRUE;
+    }else if(strcmp(tok,"end")==0 && passagem==1){
+        fechou_begin_end = !fechou_begin_end;
         return TRUE;
     }
-    return FALSE;
+    if(passagem==1)// se entrou em um dos ifs na primeira passagem retorna TRUE. Se n, FALSE. Como a avaliacao ja foi feita na primeira passagem, nao precisa ser feita na segunda
+        return FALSE;
+    else
+        return TRUE;
 }
-int existe_erro_conversao(long int numero, char*tok,char*aux_erro,int erno){
-    return (aux_erro == tok || *aux_erro!= '\0' ||
-            ((numero == LONG_MIN || numero == LONG_MAX) && erno == ERANGE));
+void avalia_argumentos_section(char* tok){
+    if(strcmp(tok,"data")==0){//secao de dados
+            endereco_dados = contador_posicao;// manter o endereco inical da secao de dados possibilita saber se ha pulos
+                                              //para secao indevida
+    }else if(strcmp(tok,"text")==0){//section text declarada no meio do codigo assembly
+        if(contador_posicao!=0){
+            printf("\nDiretiva section text declarada em lugar invalido na linha %d\n",contador_linha);
+            total_erros++;
+        }
+    }else{// a diretiva eh section, mas os argumentos nao sao data ou text
+            printf("\nArgumentos da diretiva section invalidos na linha %d (diretiva section aceita somente text ou data como argumentos)\n",contador_linha);
+            total_erros++;
+    }
+}
+short int diretiva_space_primeira_passagem(char* tok, short int numero){
+    if(existe_token(tok)){
+        numero= converte_em_num(tok,numero);
+        if(numero>=0){
+                Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'E',numero);
+                contador_posicao+=numero;
+        }else{
+                printf("\nTotal de espacos a alocar menor que 0 ou erro na constante numerica na linha %d\n",contador_linha);
+                total_erros++;
+        }
+    }else{
+            numero=1;
+            Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'E',1);
+            contador_posicao++;
+    }
+    return numero;
+}
+short int diretiva_const_primeira_passagem(char* tok, short int numero){
+    if(existe_token(tok)){
+            numero = converte_em_num(tok,numero);
+            Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'C',numero);
+            contador_posicao++;
+    }else{
+            numero=-1;
+            printf("\nDiretiva const sem constante numerica na linha %d",contador_linha);
+            total_erros++;
+    }
+    return numero;
 }

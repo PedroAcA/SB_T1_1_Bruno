@@ -39,7 +39,7 @@ int extrai_endereco(char* tok,short int* indice_vetor){// vai pegar uma label ou
     if(tem_aritmetica(tok)){
         endereco = converte_exp_aritmetica(tok,indice_vetor,(ha_externo+indice_externo));
     }else{
-        buscador = existe_simbolo(TS,tok);
+        buscador = busca_simbolo(TS,tok);
         //if(buscador->externo == 's')
             //ha_externo[indice_externo]='T';
         if(buscador!=NULL){
@@ -101,6 +101,7 @@ int enderecos_sem_erros(char *nome_instr,short int* enderecos,short int*indices)
     }else if(eh_pulo(nome_instr)){
         return pulo_valido(enderecos[0]);
     }else if (strcmp(nome_instr,"stop")==0){
+        tem_stop=TRUE;
         return endereco_stop_correto(enderecos[0]);
     }else{
         if(buscador!=NULL){
@@ -179,3 +180,5 @@ int pulo_valido(int endereco_total){
         return TRUE;// se nao ha secao de dados, entao todo codigo eh secao texto
     }
 }
+
+
