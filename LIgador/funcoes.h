@@ -39,3 +39,4 @@ Tabela* CriaGlobal (Tabela*,Tabela*,Tabela*,Tabela*);
 void ImprimirCoidgo(Codigo*,Codigo*,Codigo*, FILE*);
 Codigo* ResolveConflitosCruzados(Codigo*,Tabela*, Tabela*);
 Codigo* RealocaRelativos(Codigo*, Relocacao*, int);
+void copia (FILE*, char*);

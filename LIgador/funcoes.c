@@ -390,3 +390,20 @@ Codigo* RealocaRelativos(Codigo* codigo, Relocacao* tabela, int fc){
 
 	return codigo;
 }
+
+void copia (FILE* arq, char* nome_arq){
+	char c;
+
+	FILE* arq2 = fopen (nome_arq, "w");
+	
+	if( (c= fgetc(arq)) != ' ' ){
+		rewind(arq);
+	}
+
+	while(c!=EOF){		
+		if ((c = fgetc(arq)) != EOF)
+			fprintf(arq2,"%c",c);
+	}
+
+	fclose(arq2);
+}
