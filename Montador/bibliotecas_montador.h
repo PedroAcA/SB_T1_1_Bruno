@@ -5,15 +5,16 @@
 #include<stdlib.h>
 #include<string.h>
 #include<ctype.h>
+#include"tabelas.h"
 #include"scanner.h"
 #include"arquivos.h"
 #include"pre_processador.h"
-#include"tabelas.h"
 #include"parser.h"
 #include "parser2.h"
-int contador_linha,rotulos_linha;
+short int *indice_realocacao;
+int contador_linha,rotulos_linha,tamanho_realoc;
 short int contador_posicao;
 int passagem,total_erros,fechou_begin_end,endereco_dados;
 TabelaDeInstrucoes* Instrucoes;
 TabelaDeSimbolos* TS;
-
+TabelaDeDiretivas* Tab_Dir;
