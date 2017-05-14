@@ -7,3 +7,4 @@ void escreve_tabela_uso();
 void escreve_tabela_definicao();
 void escreve_tabela_realoc();
 void escreve_diretiva(char,short int);
+void fecha_arq_obj();

@@ -10,6 +10,7 @@ void verifica_linhas(FILE* arq){
    // printf("\nPASSAGEM: %d\n",passagem);
     while(!feof(arq)){
         linha = proxima_linha(arq);
+        linha = elimina_caracter(linha,"\r");// caso o formato de arquivo termine com \r\n, substitui o \r por espaco
       //  printf("\nLinha lida %s\n",linha);
         //printf("\nContador linha: %d\n",contador_linha);
         token = divide_tokens(linha);
@@ -103,15 +104,14 @@ int existe_instrucao(char *tok){
             tok = prox_token();
             converte_em_enderecos(tok,instrucao_atual,indice_vetor,endereco_args);
             if(!existe_token(prox_token())){
-                //if(!existe_argumento_externo()){
+                if(!existe_argumento_externo()){
                     if(enderecos_sem_erros(instrucao_atual->mnemonico,endereco_args,indice_vetor)){
                         escreve_instrucao(instrucao_atual,endereco_args);
-                        //printf("Tudo correto com a instrucao %s de argumentos %d e %d\n",instrucao_atual->mnemonico,endereco_args[0],endereco_args[1]);
                     }
-                //}else{
-                    //if(endereco_nao_externo_sem_erro(instrucao_atual->mnemonico,endereco_args,indice_vetor))
-                        //escreve_instrucao();
-                //}
+                }else{
+                    if(endereco_nao_externo_sem_erro(instrucao_atual->mnemonico,endereco_args,indice_vetor))
+                        escreve_instrucao(instrucao_atual,endereco_args);
+                }
             }else{
                     printf("Numero incorreto de argumentos para a instrucao %s na linha %d\n",instrucao_atual->mnemonico,contador_linha);
                     total_erros++;
@@ -166,9 +166,25 @@ int existe_diretiva(char *tok){
             escreve_diretiva('C',numero);
 
         return TRUE;
-    }else if(strcmp(tok,"public")==0){
+    }else if(strcmp(tok,"public")==0 && passagem==1){
+        tok = prox_token();
+        TD = Insere_Simbolo_publico(TD,tok);
+        if(existe_token(prox_token())){
+            printf("\nDiretiva public com argumento na linha %d\n",contador_linha);
+            total_erros++;
+        }
         return TRUE;
-    }else if(strcmp(tok,"extern")==0){
+    }else if(strcmp(tok,"extern")==0 && passagem==1){
+        if(rotulos_linha<1){//dritiva extern declarada sem rotulo.
+            printf("\nDiretiva extern sem rotulo associado na linha %d\n",contador_linha);
+            total_erros++;
+        }else{
+            InsereSimbolo_Externo(TS);
+        }
+        if(existe_token(prox_token())){
+            printf("\nDiretiva extern com argumento na linha %d\n",contador_linha);
+            total_erros++;
+        }
         return TRUE;
     }else if(strcmp(tok,"begin")==0 && passagem==1){
         fechou_begin_end = !fechou_begin_end;
@@ -188,6 +204,7 @@ int existe_diretiva(char *tok){
         return TRUE;
 }
 void avalia_argumentos_section(char* tok){
+    tok[(tam_string(tok))]='\0';
     if(strcmp(tok,"data")==0){//secao de dados
             endereco_dados = contador_posicao;// manter o endereco inical da secao de dados possibilita saber se ha pulos
                                               //para secao indevida

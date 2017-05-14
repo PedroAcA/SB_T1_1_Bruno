@@ -1,23 +1,17 @@
-
-
-
 section text
-input old_data
-load old_data
-l1: div dois
-store new_data
-mult dois
-store tmp_data
-load old_data
-sub tmp_data
-store tmp_data
-output tmp_data
-copy new_data,old_data
-load old_data
-jmpp l1
+mod_a: begin
+mod_b: extern
+public fat
+public n
+input n
+load n
+fat: sub one
+jmpz fim
+jmp mod_b
+
+fim: output n
 stop
 section data
-dois: const 2
-old_data: space
-new_data: space
-tmp_data: space
+n: space
+one: const 1
+end

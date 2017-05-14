@@ -13,6 +13,19 @@ typedef struct instrucoes{
     short int operandos;// eh realmente necessario se ja tem tamanho?
     struct instrucoes* prox;
 } TabelaDeInstrucoes;
+
+typedef struct definicoes{
+    char nome[50];
+    short int valor;
+    struct definicoes* prox;
+}TabelaDeDefinicoes;
+
+typedef struct uso{
+    char nome[50];
+    short int valor;
+    struct uso* prox;
+}TabelaDeUso;
+
 /*
 typedef struct obj{
     char tipo;// valores posssiveis sao 'C' (constante), 'E'(espaco) ou 'I'(instrucao)
@@ -33,13 +46,26 @@ typedef struct diretivas{
 
 void* CriaTabela (void);
 TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos*, char*,short int);
+void InsereSimbolo_Externo (TabelaDeSimbolos*);
 TabelaDeSimbolos* busca_simbolo(TabelaDeSimbolos*,char*);
+
+
 TabelaDeInstrucoes* inicializa_instrucoes(void);
 TabelaDeInstrucoes* InsereInstrucao(TabelaDeInstrucoes*,char*,short int,short int);
 TabelaDeInstrucoes* busca_instrucao(TabelaDeInstrucoes*,char*);
 TabelaDeInstrucoes* busca_incrementa_posicao(char*);
+
 TabelaDeDiretivas* insereDiretiva(TabelaDeDiretivas*,int,char,int);
 TabelaDeDiretivas* busca_end_incial(TabelaDeDiretivas*,int);
+
+TabelaDeUso* Insere_var_externa(TabelaDeUso*,char*);
+void Insere_pos_uso(TabelaDeUso*,short int);
+
+TabelaDeDefinicoes* Insere_Simbolo_publico(TabelaDeDefinicoes*,char*);
+void transfere_da_TS_para_TabelaDefinicoes(TabelaDeSimbolos*,TabelaDeDefinicoes*);
+
+void libera_tabela_definicoes(TabelaDeDefinicoes*);
+void libera_tabela_uso(TabelaDeUso*);
 void libera_tabela_instrucoes(TabelaDeInstrucoes*);
 void libera_tabela_simbolos(TabelaDeSimbolos*);
 void libera_tabela_diretivas(TabelaDeDiretivas*);

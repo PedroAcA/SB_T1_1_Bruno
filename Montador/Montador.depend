@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1494636188 source:/home/paca/SB_T1_1_Bruno/Montador/arquivos.c
+1494730926 source:/home/paca/SB_T1_1_Bruno/Montador/arquivos.c
 	"bibliotecas_montador.h"
 
-1494631663 /home/paca/SB_T1_1_Bruno/Montador/bibliotecas_montador.h
+1494723346 /home/paca/SB_T1_1_Bruno/Montador/bibliotecas_montador.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -16,12 +16,12 @@
 
 1494628809 /home/paca/SB_T1_1_Bruno/Montador/scanner.h
 
-1494620025 /home/paca/SB_T1_1_Bruno/Montador/arquivos.h
+1494678108 /home/paca/SB_T1_1_Bruno/Montador/arquivos.h
 
-1494634922 source:/home/paca/SB_T1_1_Bruno/Montador/montador.c
+1494735752 source:/home/paca/SB_T1_1_Bruno/Montador/montador.c
 	"bibliotecas_montador.h"
 
-1494633896 source:/home/paca/SB_T1_1_Bruno/Montador/scanner.c
+1494725769 source:/home/paca/SB_T1_1_Bruno/Montador/scanner.c
 	"bibliotecas_montador.h"
 	<errno.h>
 	<limits.h>
@@ -64,19 +64,19 @@
 1493428350 source:c:\users\diego\dropbox\diego\unb\sb\trabalho 1\sb_t1_1_bruno\montador\tabelas.c
 	"bibliotecas_montador.h"
 
-1494634122 /home/paca/SB_T1_1_Bruno/Montador/tabelas.h
+1494764561 /home/paca/SB_T1_1_Bruno/Montador/tabelas.h
 
 1494632500 /home/paca/SB_T1_1_Bruno/Montador/parser.h
 
-1494634240 source:/home/paca/SB_T1_1_Bruno/Montador/tabelas.c
+1494764536 source:/home/paca/SB_T1_1_Bruno/Montador/tabelas.c
 	"bibliotecas_montador.h"
 
-1494635930 source:/home/paca/SB_T1_1_Bruno/Montador/parser.c
+1494765217 source:/home/paca/SB_T1_1_Bruno/Montador/parser.c
 	"bibliotecas_montador.h"
 
-1494553517 /home/paca/SB_T1_1_Bruno/Montador/parser2.h
+1494728441 /home/paca/SB_T1_1_Bruno/Montador/parser2.h
 
-1494633975 source:/home/paca/SB_T1_1_Bruno/Montador/parser2.c
+1494735703 source:/home/paca/SB_T1_1_Bruno/Montador/parser2.c
 	"bibliotecas_montador.h"
 	<errno.h>
 	<limits.h>

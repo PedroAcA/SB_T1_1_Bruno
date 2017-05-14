@@ -41,14 +41,24 @@ void escreve_tabelas(){
     escreve_tabela_realoc();
 }
 void escreve_tabela_uso(){
+    TabelaDeUso* aux = TU;
     if(obj!=NULL){
         fprintf(obj,"\n\nTABLE USE\n");
+        while(aux!=NULL){
+            fprintf(obj,"%s %d\n",aux->nome,(int)aux->valor);
+            aux = aux->prox;
+        }
         fprintf(obj,"\n");
     }
 }
 void escreve_tabela_definicao(){
+    TabelaDeDefinicoes* aux = TD;
     if(obj!=NULL){
         fprintf(obj,"TABLE DEFINITION\n");
+        while(aux!=NULL){
+            fprintf(obj,"%s %d\n",aux->nome,(int)aux->valor);
+            aux = aux->prox;
+        }
         fprintf(obj,"\n");
     }
 }
@@ -61,4 +71,8 @@ void escreve_tabela_realoc(){
 
         fprintf(obj,"\n");
     }
+}
+void fecha_arq_obj(){
+    if(obj!=NULL)
+        fclose(obj);
 }

@@ -22,3 +22,5 @@ int passagem,total_erros,fechou_begin_end,endereco_dados,tem_begin,tem_stop;
 TabelaDeInstrucoes* Instrucoes;
 TabelaDeSimbolos* TS;
 TabelaDeDiretivas* Tab_Dir;
+TabelaDeUso* TU;
+TabelaDeDefinicoes* TD;

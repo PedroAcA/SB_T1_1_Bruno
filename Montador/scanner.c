@@ -84,8 +84,10 @@ int converte_exp_aritmetica(char* tok,short int* indice_vetor,char *tem_extern){
     if(existe_token(copia_tok)){//inicio da avaliacao do rotulo
             buscador = busca_simbolo(TS,copia_tok);
         if(buscador!=NULL){
-            //if(buscador->externo == 's')
-                //*tem_extern='T';
+            if(buscador->externo == 's'){
+                *tem_extern='T';
+                TU = Insere_var_externa(TU,buscador->nome);
+            }
             numero= buscador->valor;
             copia_tok = strtok_r(NULL," ",&end_tok);
             if(existe_token(copia_tok)){// inicio da avalicao do numero

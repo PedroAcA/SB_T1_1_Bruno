@@ -21,17 +21,11 @@ void converte_em_enderecos(char *tok,TabelaDeInstrucoes* instrucao_atual,short i
         indice_realocacao = (short int*) realloc(indice_realocacao,tamanho_realoc*sizeof(short int));
         tam++;
         args[0] = extrai_endereco(tok,indice_vetor);
+        Insere_pos_uso(TU,(contador_posicao-1) );
     }else if(strcmp(instrucao_atual->mnemonico,"stop")==0){//nao ha argumentos e a instrucao eh stop
           args[0] = -2;// entao colocamos -2 na posicao 0 de args para indicar stop com argumentos corretos
           indice_vetor[0] = 0;
     }
-    /*while(existe_token(tok)){
-            tam++;
-            args = (int*)realloc(args,tam*sizeof(int));
-            args[tam-1] =  extrai_endereco(tok);
-            tok = prox_token();
-    }*/
-    //*qte_args = tam;
 }
 int extrai_endereco(char* tok,short int* indice_vetor){// vai pegar uma label ou label+ numero e retornar o endereco resultante
     TabelaDeSimbolos* buscador;
@@ -40,10 +34,12 @@ int extrai_endereco(char* tok,short int* indice_vetor){// vai pegar uma label ou
         endereco = converte_exp_aritmetica(tok,indice_vetor,(ha_externo+indice_externo));
     }else{
         buscador = busca_simbolo(TS,tok);
-        //if(buscador->externo == 's')
-            //ha_externo[indice_externo]='T';
         if(buscador!=NULL){
             endereco = buscador->valor;
+            if(buscador->externo == 's'){
+                ha_externo[indice_externo]='T';
+                TU = Insere_var_externa(TU,buscador->nome);
+            }
         }else{
             endereco = -1;
             printf("\nSimbolo %s nao definido na linha %d\n",tok,contador_linha);
@@ -69,18 +65,19 @@ void processa_argumentos_copy(char* tok,short int* indice_vetor,short int* args)
             indice_realocacao[tamanho_realoc-1] = contador_posicao-2+(tam-1);
             tamanho_realoc++;
             indice_realocacao = (short int*) realloc(indice_realocacao,tamanho_realoc*sizeof(short int));
-            //indice_externo = tam-1;
+            indice_externo = tam-1;
             args[tam-1]=extrai_endereco(copia_tok,(indice_vetor+tam-1));
+            Insere_pos_uso(TU,(contador_posicao-2+(tam-1)) );
             copia_tok = strtok_r(NULL," ",&end_tok);
         }
-        erros_args_copy(tam);
+        erros_num_args_copy(tam);
     }else{
         printf("\nFormato dos argumentos de copy incorreto na linha %d\n",contador_linha);
         total_erros++;
     }
     free(inicio_desaloc);
 }
-void erros_args_copy(short int n_args){
+void erros_num_args_copy(short int n_args){
     if(n_args <2){//gera o numero de argumentos lidos para copy
         printf("\nNumero de argumentos menor do que o esperado para copy na linha %d\n",contador_linha);
         total_erros++;
@@ -108,7 +105,7 @@ int enderecos_sem_erros(char *nome_instr,short int* enderecos,short int*indices)
             if(acessa_memoria(nome_instr)){// todas as instrucoes que acessam a memoria, a execessao do copy
                 return endereco_acesso_memoria_valido(buscador,indices,0);
             }else if(strcmp(nome_instr,"div")==0){//n se pode dividir por 0
-                return (divide_zero(buscador)==FALSE);
+                return (!divide_zero(buscador));
             }else{
                 return endereco_alocado(buscador,indices,0);
             }
@@ -132,15 +129,6 @@ int eh_pulo(char *instrucao){
 int acessa_memoria(char *instrucao){
     return (strcmp(instrucao,"store")==0 ||strcmp(instrucao,"input")==0);
 }
-int endereco_acesso_memoria_valido(TabelaDeDiretivas* buscador,short int* indices,int ind_arg){
-    if(!eh_constante(buscador)){
-        return endereco_alocado(buscador,indices,ind_arg);
-    }else{
-        printf("Tentiva de modificar um valor constante na linha %d\n",contador_linha);
-        total_erros++;
-    }
-    return FALSE;
-}
 int endereco_alocado(TabelaDeDiretivas* buscador,short int* indices,int ind_arg){
     if(memoria_alocada(buscador,indices[ind_arg])){
             return TRUE;
@@ -150,6 +138,16 @@ int endereco_alocado(TabelaDeDiretivas* buscador,short int* indices,int ind_arg)
     }
     return FALSE;
 }
+int endereco_acesso_memoria_valido(TabelaDeDiretivas* buscador,short int* indices,int ind_arg){
+    if(!eh_constante(buscador)){
+        return endereco_alocado(buscador,indices,ind_arg);
+    }else{
+        printf("Tentiva de modificar um valor constante na linha %d\n",contador_linha);
+        total_erros++;
+    }
+    return FALSE;
+}
+
 int argumentos_copy_corretos(TabelaDeDiretivas* buscador, short int* indices, short int* end_base){
     if(endereco_alocado(buscador,indices,0)){
         buscador = busca_end_incial(Tab_Dir,end_base[1]);
@@ -171,14 +169,42 @@ int endereco_stop_correto(int endereco){
     }
 }
 int divide_zero(TabelaDeDiretivas* buscador){
-    return(buscador->tipo=='C' && buscador->valor==0);
+    if(buscador->tipo=='C'){
+        if(buscador->valor==0){
+            printf("\nTentaiva de divisao por 0 na linha %d\n",contador_linha);
+            total_erros++;
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 int pulo_valido(int endereco_total){
     if(endereco_dados!=-1){
-        return endereco_total<endereco_dados;
+        if(endereco_total >= endereco_dados){
+            printf("\nPulo da linha %d esta acessando area de dados\n",contador_linha);
+            total_erros++;
+            return FALSE;
+        }
+        return (endereco_total < endereco_dados);
     }else{
         return TRUE;// se nao ha secao de dados, entao todo codigo eh secao texto
     }
 }
-
-
+int existe_argumento_externo(){
+    return ( (ha_externo[0] == 'T') || (ha_externo[1] == 'T') );
+}
+int endereco_nao_externo_sem_erro(char* nome_instrucao,short int *enderecos,short int* indices){
+    TabelaDeDiretivas* buscador;
+    if(strcmp(nome_instrucao,"copy")==0 ){
+        if(ha_externo[0]=='T' && ha_externo[1]=='F'){// segundo argumento nao eh externo
+            buscador = busca_end_incial(Tab_Dir,(enderecos[1] - indices[1]) );
+            return (buscador!=NULL && endereco_acesso_memoria_valido(buscador,indices,1) );
+        }else if(ha_externo[0]=='F' && ha_externo[1]=='T'){// primeiro argumento eh externo
+            buscador = busca_end_incial(Tab_Dir,(enderecos[0] - indices[0]) );
+            return (buscador!=NULL && endereco_alocado(buscador,indices,0) );
+        }
+    }else if(strcmp(nome_instrucao,"stop")==0 ){
+        return endereco_stop_correto(enderecos[0]);
+    }
+    return TRUE; // todas as outras funcoes so tem um argumento. Como ele eh externo, entao ligador eh quem avalia eles
+}

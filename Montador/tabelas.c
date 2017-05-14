@@ -16,6 +16,17 @@ TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos* tabela, char nome[],short int
     tabela = novo;
     return novo;
 }
+/*Como simbolo externo sempre deve vir apos rotulo, entao se ha extern
+o inicio da tabela de simbolos eh o rotulo atual a ser inserido como extern*/
+void InsereSimbolo_Externo (TabelaDeSimbolos* tabela){
+  //  TabelaDeSimbolos * novo = (TabelaDeSimbolos*) calloc(1,sizeof(TabelaDeSimbolos));
+  //  strcpy(novo->nome, nome);
+    tabela->valor = 0;
+    //novo->prox = tabela;
+    tabela->externo = 's';
+   // tabela = novo;
+   // return novo;
+}
 TabelaDeSimbolos* busca_simbolo(TabelaDeSimbolos* tabela,char* simb){
     while(tabela!=NULL){
         if(strcmp(tabela->nome,simb)==0){//achou simbolo na tabela de simbolos
@@ -102,6 +113,67 @@ TabelaDeDiretivas* busca_end_incial(TabelaDeDiretivas* Diretivas, int end_base){
     return Diretivas;
 }
 
+//Insere somente o nome da variavel externa para depois a funcao
+//Insere_pos_uso colocar o contador de posicao referente à variavel
+TabelaDeUso* Insere_var_externa(TabelaDeUso* TabUso, char* nome){
+    TabelaDeUso* novo = (TabelaDeUso*)malloc(sizeof(TabelaDeUso));
+    if(novo==NULL){
+        printf("Sistema Operacional nao conseguiu reservar espaco de memoria\n");
+        exit(-1);
+    }else{
+        strcpy(novo->nome,nome);
+        novo->prox = TabUso;
+    }
+    return novo;
+}
+// Funcao Insere_pos_uso espera ser chamada apos a insercao de um simbolo externo
+// na tabela de uso.
+void Insere_pos_uso(TabelaDeUso* TabUso,short int pos_uso){
+    if(TabUso!=NULL)
+        TabUso->valor = pos_uso;
+}
+
+TabelaDeDefinicoes* Insere_Simbolo_publico(TabelaDeDefinicoes* TabDef, char* nome){
+    TabelaDeDefinicoes* novo = (TabelaDeDefinicoes*)malloc(sizeof(TabelaDeDefinicoes));
+    if(novo==NULL){
+        printf("Sistema Operacional nao conseguiu reservar espaco de memoria\n");
+        exit(-1);
+    }else{
+        strcpy(novo->nome,nome);
+        novo->prox = TabDef;
+    }
+    return novo;
+}
+
+void transfere_da_TS_para_TabelaDefinicoes(TabelaDeSimbolos* TabelaSimbolos, TabelaDeDefinicoes* TabelaDefinicoes){
+    TabelaDeSimbolos *Simbolo_correspondente;
+    while(TabelaDefinicoes!=NULL){
+        Simbolo_correspondente = busca_simbolo(TS,TabelaDefinicoes->nome);
+        if(Simbolo_correspondente!=NULL){
+            TabelaDefinicoes->valor = Simbolo_correspondente->valor;
+        }else{
+            printf("\nSimbolo publico %s nao foi definido no codigo\n",TabelaDefinicoes->nome);
+            total_erros++;
+        }
+        TabelaDefinicoes = TabelaDefinicoes->prox;
+    }
+}
+void libera_tabela_definicoes(TabelaDeDefinicoes* def){
+    TabelaDeDefinicoes* aux;
+    while(def!=NULL){
+        aux = def->prox;
+        free(def);
+        def = aux;
+    }
+}
+void libera_tabela_uso(TabelaDeUso* u){
+    TabelaDeUso* aux;
+    while(u!=NULL){
+        aux = u->prox;
+        free(u);
+        u = aux;
+    }
+}
 void libera_tabela_instrucoes(TabelaDeInstrucoes* ins){
     TabelaDeInstrucoes* aux;
     while(ins!=NULL){
