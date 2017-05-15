@@ -195,10 +195,12 @@ Codigo* CriaCodigo(Codigo* codigo, FILE* arq){ //CRIA UMA TABELA COM O CODIGO A 
 
 int tamanho (Codigo* codigo){ //RETORNA O TAMANHO EM BYTES DE UM CODIGO
 	Codigo *p = codigo;
+	int tamanho = 0;
 	while(p->prox!=NULL){
 		p=p->prox;
+		tamanho++;
 	}
-	return p->byte;
+	return tamanho;
 }
 
 int EstaNa (char palavra[],Tabela* tabela){ //VERIFICA SE UM ELEMENTO ESTA EM UMA TABELA
