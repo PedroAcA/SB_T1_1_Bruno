@@ -40,3 +40,4 @@ void ImprimirCoidgo(Codigo*,Codigo*,Codigo*, FILE*);
 Codigo* ResolveConflitosCruzados(Codigo*,Tabela*, Tabela*);
 Codigo* RealocaRelativos(Codigo*, Relocacao*, int);
 void copia (FILE*, char*);
+void FatorDeCorrecao (Codigo*,Tabela*,Tabela*,Relocacao*,int);
