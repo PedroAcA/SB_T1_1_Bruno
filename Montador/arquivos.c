@@ -1,6 +1,4 @@
 #include"bibliotecas_montador.h"
-FILE *obj;
-char *nome_pre,*nome_asm,*nome_obj;
 char **argumentos_cmd;
      /*nome_asm = args[2];
                 if(arg_saida_sem_extensao(args[3])){
@@ -25,7 +23,9 @@ void analisa_args_linha_comando(int n_arg,char **args ){
         }else if(strcmp(args[1],"-o")==0){
             if(arg_contem_extensao(args[2],".asm") ){
                 salva_nomes_entrada_saida(&nome_asm,&nome_obj,".o");
-                nome_pre = strcat(args[3],".pre");
+                nome_pre = (char*)calloc( (tam_string(args[3]) + tam_string(".pre") + 1 ), sizeof(char) );
+                strcpy(nome_pre,args[3]);
+                strcat(nome_pre,".pre");
             }else if(arg_contem_extensao(args[2],".pre") ){
                 salva_nomes_entrada_saida(&nome_pre,&nome_obj,".o");
                 nome_asm =  NULL;
@@ -41,9 +41,16 @@ void analisa_args_linha_comando(int n_arg,char **args ){
         printf("\nNumero de argumentos diferente do esperado.\nPor favor, tente novamente inserindo nome do programa + 3 argumentos\n");
         exit(-3);
     }
+//    printf("\nASM:%sPRE:%sOBJ: %s\n\n",nome_asm,nome_pre,nome_obj);
+}
+FILE *abre_arq_pre(){
+    if(nome_pre!=NULL)
+        return fopen(nome_pre,"r");
+    else
+        return NULL;
 }
 int arg_contem_extensao(char* arg,char* extensao){
-    return (strpbrk(arg,extensao)!=NULL);
+    return (strstr(arg,extensao)!=NULL);
 }
 int arg_saida_sem_extensao(char *arg){
     return (strrchr (arg,'.')==NULL );
@@ -51,7 +58,9 @@ int arg_saida_sem_extensao(char *arg){
 void salva_nomes_entrada_saida(char** entrada,char** saida,char* ext_saida){
     *entrada= argumentos_cmd[2];
     if(arg_saida_sem_extensao(argumentos_cmd[3])){
-        *saida = strcat(argumentos_cmd[3],ext_saida);
+        *saida = (char*)calloc( (tam_string(argumentos_cmd[3]) + tam_string(ext_saida) + 1),sizeof(char));
+        strcpy(*saida,argumentos_cmd[3]);
+        strcat(*saida,ext_saida);
     }else{
         printf("\nArquivo de saida nao pode ter extensao\n Por favor, tente novamente com um arquivo de saida sem extensao\n");
         exit(-5);
@@ -62,7 +71,7 @@ int existe_arquivo(FILE* arq){
     return arq!=NULL;
 }
 void cria_arq_obj(){
-    obj = fopen("teste1.o","w+");
+    obj = fopen(nome_obj,"w+");
     if(obj!=NULL && tem_begin)
         fprintf(obj,"CODE\n");
 }
@@ -129,6 +138,12 @@ void escreve_tabela_realoc(){
 
         fprintf(obj,"\n");
     }
+}
+void libera_nome_arquivos(){
+    if(nome_obj!=NULL)
+        free(nome_obj);
+    if( (strcmp(argumentos_cmd[1],"-o") == 0) && arg_contem_extensao(argumentos_cmd[2],".asm"))
+        free(nome_pre);
 }
 void fecha_arq_obj(){
     if(obj!=NULL)

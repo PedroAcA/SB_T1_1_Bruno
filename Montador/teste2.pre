@@ -1,0 +1,28 @@
+
+
+
+section text
+
+begin
+rot1: rot2: 
+rot3: 1
+9rpt: 
+rot4: 42
+rot1: 1
+9rpt: 
+power_of_dark_side a b 
+load a rot3+b
+load rot3+b
+load a rot3+2
+load rot3+2
+copy a,rot3
+copy a, rot3
+copy a 
+copy ben10,rot3
+copy ben10+2,rot3+4
+
+c#: space 3
+section data
+ben10: const 5
+end
+

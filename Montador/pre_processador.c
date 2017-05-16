@@ -34,8 +34,8 @@ void pre_processa(char nome_arq[]){
         printf("Arquivo temp2.pre n%co encontrado!",198);
     }
 
-    remove("teste1.pre");
-    rename("temp3.pre","teste1.pre");
+    remove(nome_pre);
+    rename("temp3.pre",nome_pre);
     remove("temp1.pre");
     remove("temp2.pre");
 

@@ -14,7 +14,8 @@
 /*a variavel rotulos_linha indica quantos rotulos existem por linha
 (possibilita detectar o erro de mais de um rótulo por linha)
 */
-
+FILE *obj;
+char *nome_pre,*nome_asm,*nome_obj;
 short int *indice_realocacao;
 int contador_linha,rotulos_linha,tamanho_realoc;
 short int contador_posicao;

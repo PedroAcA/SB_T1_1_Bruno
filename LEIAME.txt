@@ -1,0 +1,5 @@
+Alunos:
+	Pedro Aurelio Coelho de Almeida (14/0158103)
+
+Para gerar os executaveis no Linux:
+	Navegue no terminal ate chegar a esta pasta (SB_T1_1_Bruno). Para criar o ligador na pasta Ligador digite make ligar. Para o montador digite make montar. Para criar o ligador e o montador com o mesmo comando digite make  
