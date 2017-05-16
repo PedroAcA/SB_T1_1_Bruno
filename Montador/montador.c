@@ -1,7 +1,9 @@
 #include"bibliotecas_montador.h"
-int main(){
+int main(int argc, char *argv[]){
     char* nome_arq ={"teste1.asm"};
     FILE *arq;
+    //analisa_args_linha_comando(argc,argv);
+
     indice_realocacao = (short int*)malloc(sizeof(short int));
     indice_realocacao[0] = -1; //flag inicial para indicar que nao ha nada no inicio
     tamanho_realoc=1;

@@ -1,5 +1,63 @@
 #include"bibliotecas_montador.h"
 FILE *obj;
+char *nome_pre,*nome_asm,*nome_obj;
+char **argumentos_cmd;
+     /*nome_asm = args[2];
+                if(arg_saida_sem_extensao(args[3])){
+                    nome_pre = args[3];
+                    strcat(nome_pre,".pre");
+                    nome_obj= NULL;
+                }else{
+                    printf("\nArquivo de saida nao pode ter extensao\n Por favor, tente novamente com um arquivo de saida sem extensao\n");
+                    exit(-5);
+                }*/
+void analisa_args_linha_comando(int n_arg,char **args ){
+    if(n_arg==4){//3 arguemntos + nome do programa
+        argumentos_cmd = args;
+        if(strcmp(args[1],"-p")==0){
+            if(arg_contem_extensao(args[2],".asm") ){
+                salva_nomes_entrada_saida(&nome_asm,&nome_pre,".pre");
+                nome_obj= NULL;
+            }else{
+                printf("\nArquivo de entrada para pre-processamento sem extensao que assembly (.asm)\nPor favor, tente novamente com um arquivo de entrada com extensao .asm\n");
+                exit(-6);
+            }
+        }else if(strcmp(args[1],"-o")==0){
+            if(arg_contem_extensao(args[2],".asm") ){
+                salva_nomes_entrada_saida(&nome_asm,&nome_obj,".o");
+                nome_pre = strcat(args[3],".pre");
+            }else if(arg_contem_extensao(args[2],".pre") ){
+                salva_nomes_entrada_saida(&nome_pre,&nome_obj,".o");
+                nome_asm =  NULL;
+            }else{
+                printf("\nAs extensoes de arquivos de entrada reconhecidas sao somente .asm ou .pre\n Por favor, tente novamente com uma dessas extensoes");
+                exit(-7);
+            }
+        }else{
+            printf("\nOperacoes aceitas sao somente -p e -o\nPor favor, tente novamente com uma opcao valida\n");
+            exit(-2);
+        }
+    }else{
+        printf("\nNumero de argumentos diferente do esperado.\nPor favor, tente novamente inserindo nome do programa + 3 argumentos\n");
+        exit(-3);
+    }
+}
+int arg_contem_extensao(char* arg,char* extensao){
+    return (strpbrk(arg,extensao)!=NULL);
+}
+int arg_saida_sem_extensao(char *arg){
+    return (strrchr (arg,'.')==NULL );
+}
+void salva_nomes_entrada_saida(char** entrada,char** saida,char* ext_saida){
+    *entrada= argumentos_cmd[2];
+    if(arg_saida_sem_extensao(argumentos_cmd[3])){
+        *saida = strcat(argumentos_cmd[3],ext_saida);
+    }else{
+        printf("\nArquivo de saida nao pode ter extensao\n Por favor, tente novamente com um arquivo de saida sem extensao\n");
+        exit(-5);
+    }
+}
+
 int existe_arquivo(FILE* arq){
     return arq!=NULL;
 }
