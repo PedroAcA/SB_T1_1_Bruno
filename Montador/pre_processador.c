@@ -79,8 +79,8 @@ TabelaEQU* cria_lista(FILE* arq, TabelaEQU* tabela){
         limpa(token2,50);
     }
 
-    if(feof(arq)) //SE NAO ENCONTROU SECTION TEXT
-        printf("SECTION TEXT FALTANTE\n");
+    //if(feof(arq)) //SE NAO ENCONTROU SECTION TEXT
+      //  printf("SECTION TEXT FALTANTE\n");
 
     /*TabelaEQU* p;
 

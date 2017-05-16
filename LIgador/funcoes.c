@@ -21,18 +21,7 @@ void liga(FILE* arq, FILE* arq2, FILE* arq3,char* nome_arq){
 	TabelaDefinicoes2 = CriaDefinicoes(TabelaDefinicoes2,arq2);
 	TabelaRelocacao2 = CriaRelocacao(TabelaRelocacao2, arq2); 
 	fc2 = tamanho(Codigo1) +1;
-	for (q = Codigo2; q!=NULL; q=q->prox){
-		q->byte = q->byte+fc2;
-	}
-	for(p = TabelaDefinicoes2;p!=NULL;p=p->prox){
-		p->valor = p->valor+fc2;
-	}
-	for(p = TabelaUso2;p!=NULL;p=p->prox){
-		p->valor = p->valor+fc2;
-	}
-	for(r = TabelaRelocacao2;r!=NULL;r=r->prox){
-		r->byte = r->byte + fc2;
-	}
+	FatorDeCorrecao(Codigo2, TabelaDefinicoes2, TabelaUso2, TabelaRelocacao2,fc2);
 
 
 	//SE EXISTE ARQUIVO OBJETO 3
@@ -42,23 +31,13 @@ void liga(FILE* arq, FILE* arq2, FILE* arq3,char* nome_arq){
 		TabelaDefinicoes3 = CriaDefinicoes(TabelaDefinicoes3,arq3);
 		TabelaRelocacao3 = CriaRelocacao(TabelaRelocacao3, arq3);
 		fc3 = fc2 + tamanho(Codigo2) + 1;
-		for (q = Codigo3; q!=NULL; q=q->prox){
-			q->byte = q->byte+fc3;
-		}
-		for(p = TabelaDefinicoes3;p!=NULL;p=p->prox){
-			p->valor = p->valor+fc3;
-		}
-		for(p = TabelaUso3;p!=NULL;p=p->prox){
-			p->valor = p->valor+fc3;
-		}
-		for(r = TabelaRelocacao3;r!=NULL;r=r->prox){
-			r->byte = r->byte+fc3;
-		}
+		FatorDeCorrecao(Codigo3, TabelaDefinicoes3, TabelaUso3, TabelaRelocacao3,fc3);
 	}
 
 	//SE NAOHA SIMBOLOS INDEFINIDOS NEM REDEFINICOES
-	if ((AnalisaIndefinicoes(TabelaUso1,TabelaUso2,TabelaUso3,TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3) == SUCESSO) && (AnalisaRedefinicoes(TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3) == SUCESSO)){
-		
+	if ((AnalisaIndefinicoes(TabelaUso1,TabelaUso2,TabelaUso3,TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3) == SUCESSO) &&
+	 	(AnalisaRedefinicoes(TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3) == SUCESSO)){	
+
 		//CRIA TABELA DE DEFINICOES GLOBAL
 		TabelaGlobal = CriaGlobal(TabelaGlobal,TabelaDefinicoes1,TabelaDefinicoes2,TabelaDefinicoes3);
 
@@ -216,10 +195,12 @@ Codigo* CriaCodigo(Codigo* codigo, FILE* arq){ //CRIA UMA TABELA COM O CODIGO A 
 
 int tamanho (Codigo* codigo){ //RETORNA O TAMANHO EM BYTES DE UM CODIGO
 	Codigo *p = codigo;
+	int tamanho = 0;
 	while(p->prox!=NULL){
 		p=p->prox;
+		tamanho++;
 	}
-	return p->byte;
+	return tamanho;
 }
 
 int EstaNa (char palavra[],Tabela* tabela){ //VERIFICA SE UM ELEMENTO ESTA EM UMA TABELA
@@ -405,4 +386,23 @@ void copia (FILE* arq, char* nome_arq){
 	}
 
 	fclose(arq2);
+}
+
+void FatorDeCorrecao (Codigo* codigo, Tabela* TabelaDefinicoes, Tabela* TabelaUso, Relocacao* TabelaRelocacao, int fc){
+	Codigo *q;
+	Tabela* p;
+	Relocacao *r;
+
+	for (q = codigo; q!=NULL; q=q->prox){
+		q->byte = q->byte+fc;
+	}
+	for(p = TabelaDefinicoes;p!=NULL;p=p->prox){
+		p->valor = p->valor+fc;
+	}
+	for(p = TabelaUso;p!=NULL;p=p->prox){
+		p->valor = p->valor+fc;
+	}
+	for(r = TabelaRelocacao;r!=NULL;r=r->prox){
+		r->byte = r->byte + fc;
+	}
 }
