@@ -41,7 +41,7 @@ int classifica(char* tok){
         }else if(!existe_instrucao(tok)){
             if(!existe_diretiva(tok)){
                 if(passagem==1){//para nao repetir a msm msg de erro com relacao a primeira passagem
-                    printf("\nOperacao %s nao identificada na linha %d\n",tok,contador_linha);
+                    printf("\nErro sintatico: Operacao %s nao identificada na linha %d\n",tok,contador_linha);
                     total_erros++;
                 }
             }
@@ -58,14 +58,14 @@ int existe_rotulo(char * tok){
     if(tok[ultimo_caract] == ':'){// ultimo caracter valido do token eh : e primeiro nao eh numero sao os requisitos
         if(passagem==1){// so precisa avaliar o rotulo em uma passagem so
             if(tam_string(tok)>51){// 50 caracteres de nome de variavel + 1 para ':'
-                printf("\nRotulo %s com mais de 50 caracteres\n",tok);
+                printf("\nErro lexico: Rotulo %s com mais de 50 caracteres\n",tok);
                 total_erros++;
             }else if(strpbrk(tok,"';!@#$%&*()-+={[}]?/°>.<,|\\  */")!=NULL){//ha um caracter invaliido
-                printf("\nCaracteres invalidos no rotulo presente na linha %d\n",contador_linha);
+                printf("\nErro lexico: Caracteres invalidos no rotulo presente na linha %d\n",contador_linha);
             }else{
             //   printf("Analisando rotulos\n");
                 if(eh_numero(tok[0])){
-                    printf("\nRotulo %s mal formado na linha %d (rotulo nao pode comecar com numero)\n",tok,contador_linha);
+                    printf("\nErro lexico: Rotulo %s mal formado na linha %d (rotulo nao pode comecar com numero)\n",tok,contador_linha);
                     total_erros++;
                 }
             }
@@ -88,11 +88,11 @@ void busca_primeira_passagem(char* tok){
           //  printf("\nInserindo %s na tabela de simbolos\n",tok);
             TS = InsereSimbolo(TS,tok,contador_posicao);
         }else{
-            printf("\nSimbolo %s redefinido na linha %d\n",tok,contador_linha);
+            printf("\nErro semantico: Simbolo %s redefinido na linha %d\n",tok,contador_linha);
             total_erros++;
         }
     }else{
-        printf("\nHa mais de um rotulo na linha %d\n",contador_linha);
+        printf("\nErro semantico: Ha mais de um rotulo na linha %d\n",contador_linha);
         total_erros++;
     }
 }
@@ -113,7 +113,7 @@ int existe_instrucao(char *tok){
                         escreve_instrucao(instrucao_atual,endereco_args);
                 }
             }else{
-                    printf("Numero incorreto de argumentos para a instrucao %s na linha %d\n",instrucao_atual->mnemonico,contador_linha);
+                    printf("Erro sintatico: Numero incorreto de argumentos para a instrucao %s na linha %d\n",instrucao_atual->mnemonico,contador_linha);
                     total_erros++;
             }
         }
@@ -128,7 +128,7 @@ int existe_diretiva(char *tok){
         avalia_argumentos_section(tok);
         tok = prox_token();
         if(existe_token(tok)){//diretiva section tem mais de um operando. Entao erro
-            printf("\nDiretiva section tem mais de um argumento na linha %d \n",contador_linha);
+            printf("\nErro sintatico: Diretiva section tem mais de um argumento na linha %d \n",contador_linha);
             total_erros++;
         }
         return TRUE;
@@ -138,11 +138,11 @@ int existe_diretiva(char *tok){
         if(passagem==1){
             if(contador_posicao>=endereco_dados && endereco_dados!=-1){// endereco_dados ==-1 signifca que nao existe section data
                 if(existe_token(prox_token())){
-                    printf("\nNumero incorreto de argumentos para a diretiva space na linha %d\n",contador_linha);
+                    printf("\nErro sintatico: Numero incorreto de argumentos para a diretiva space na linha %d\n",contador_linha);
                     total_erros++;
                 }
             }else{
-                printf("\nDiretiva space foi declarada antes da secao de dados (section data) na linha %d\n",contador_linha);
+                printf("\nErro semantico: Diretiva space foi declarada antes da secao de dados (section data) na linha %d\n",contador_linha);
                 total_erros++;
             }
         }else if(passagem==2)
@@ -155,11 +155,11 @@ int existe_diretiva(char *tok){
         if(passagem==1){
             if(contador_posicao>=endereco_dados && endereco_dados!=-1){// endereco_dados ==-1 signifca que nao existe section data
                 if(existe_token(prox_token())){
-                    printf("\nNumero incorreto de argumentos para a diretiva const na linha %d\n",contador_linha);
+                    printf("\nErro sintatico: Numero incorreto de argumentos para a diretiva const na linha %d\n",contador_linha);
                     total_erros++;
                 }
             }else{
-                printf("\nDiretiva const foi declarada antes da secao de dados (section data) na linha %d\n",contador_linha);
+                printf("\nErro semantico: Diretiva const foi declarada antes da secao de dados (section data) na linha %d\n",contador_linha);
                 total_erros++;
             }
         }else if(passagem==2)
@@ -170,19 +170,19 @@ int existe_diretiva(char *tok){
         tok = prox_token();
         TD = Insere_Simbolo_publico(TD,tok);
         if(existe_token(prox_token())){
-            printf("\nDiretiva public com argumento na linha %d\n",contador_linha);
+            printf("\nErro sintatico: Diretiva public com mais de um rotulo associado na linha %d\n",contador_linha);
             total_erros++;
         }
         return TRUE;
     }else if(strcmp(tok,"extern")==0 && passagem==1){
         if(rotulos_linha<1){//dritiva extern declarada sem rotulo.
-            printf("\nDiretiva extern sem rotulo associado na linha %d\n",contador_linha);
+            printf("\nErro sintatico: Diretiva extern sem rotulo associado na linha %d\n",contador_linha);
             total_erros++;
         }else{
             InsereSimbolo_Externo(TS);
         }
         if(existe_token(prox_token())){
-            printf("\nDiretiva extern com argumento na linha %d\n",contador_linha);
+            printf("\nErro sintatico: Diretiva extern com argumento na linha %d\n",contador_linha);
             total_erros++;
         }
         return TRUE;
@@ -190,7 +190,7 @@ int existe_diretiva(char *tok){
         fechou_begin_end = !fechou_begin_end;
         tem_begin = TRUE;
         if(contador_posicao!=0){
-            printf("\nDiretiva begin declarada em lugar invalido na linha %d\n",contador_linha);
+            printf("\nErro sintatico: Diretiva begin declarada em lugar invalido na linha %d\n",contador_linha);
             total_erros++;
         }
         return TRUE;
@@ -210,11 +210,11 @@ void avalia_argumentos_section(char* tok){
                                               //para secao indevida
     }else if(strcmp(tok,"text")==0){//section text declarada no meio do codigo assembly
         if(contador_posicao!=0){
-            printf("\nDiretiva section text declarada em lugar invalido na linha %d\n",contador_linha);
+            printf("\nErro sintatico: Diretiva section text declarada em lugar invalido na linha %d\n",contador_linha);
             total_erros++;
         }
     }else{// a diretiva eh section, mas os argumentos nao sao data ou text
-            printf("\nArgumentos da diretiva section invalidos na linha %d (diretiva section aceita somente text ou data como argumentos)\n",contador_linha);
+            printf("\nErro sintatico: Argumentos da diretiva section invalidos na linha %d (diretiva section aceita somente text ou data como argumentos)\n",contador_linha);
             total_erros++;
     }
 }
@@ -225,7 +225,7 @@ short int diretiva_space_primeira_passagem(char* tok, short int numero){
                 Tab_Dir=insereDiretiva(Tab_Dir,contador_posicao,'E',numero);
                 contador_posicao+=numero;
         }else{
-                printf("\nTotal de espacos a alocar menor que 0 ou erro na constante numerica na linha %d\n",contador_linha);
+                printf("\nErro sintatico: Total de espacos a alocar menor que 0 ou erro na constante numerica na linha %d\n",contador_linha);
                 total_erros++;
         }
     }else{
@@ -242,7 +242,7 @@ short int diretiva_const_primeira_passagem(char* tok, short int numero){
             contador_posicao++;
     }else{
             numero=-1;
-            printf("\nDiretiva const sem constante numerica na linha %d",contador_linha);
+            printf("\nErro sintatico: Diretiva const sem constante numerica na linha %d",contador_linha);
             total_erros++;
     }
     return numero;

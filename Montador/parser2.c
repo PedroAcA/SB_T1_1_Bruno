@@ -42,7 +42,7 @@ int extrai_endereco(char* tok,short int* indice_vetor){// vai pegar uma label ou
             }
         }else{
             endereco = -1;
-            printf("\nSimbolo %s nao definido na linha %d\n",tok,contador_linha);
+            printf("\nErro semantico: Simbolo %s nao definido na linha %d\n",tok,contador_linha);
             total_erros++;
         }
         *indice_vetor = 0;
@@ -72,17 +72,17 @@ void processa_argumentos_copy(char* tok,short int* indice_vetor,short int* args)
         }
         erros_num_args_copy(tam);
     }else{
-        printf("\nFormato dos argumentos de copy incorreto na linha %d\n",contador_linha);
+        printf("\nErro sintatico: Formato dos argumentos de copy incorreto na linha %d\n",contador_linha);
         total_erros++;
     }
     free(inicio_desaloc);
 }
 void erros_num_args_copy(short int n_args){
     if(n_args <2){//gera o numero de argumentos lidos para copy
-        printf("\nNumero de argumentos menor do que o esperado para copy na linha %d\n",contador_linha);
+        printf("\nErro sintatico: Numero de argumentos menor do que o esperado para copy na linha %d\n",contador_linha);
         total_erros++;
     }else if(n_args>2){
-        printf("\nNumero de argumentos maior do que o esperado para copy na linha %d\n",contador_linha);
+        printf("\nErro sintatico: Numero de argumentos maior do que o esperado para copy na linha %d\n",contador_linha);
         total_erros++;
     }
 }
@@ -110,7 +110,7 @@ int enderecos_sem_erros(char *nome_instr,short int* enderecos,short int*indices)
                 return endereco_alocado(buscador,indices,0);
             }
         }else{
-            printf("Endereco nao reservado como constante ou espaco na linha %d\n",contador_linha);
+            printf("Erro semantico: Endereco nao reservado como constante ou espaco na linha %d\n",contador_linha);
             total_erros++;
         }
     }
@@ -133,7 +133,7 @@ int endereco_alocado(TabelaDeDiretivas* buscador,short int* indices,int ind_arg)
     if(memoria_alocada(buscador,indices[ind_arg])){
             return TRUE;
     }else{
-            printf("Endereco nao alocado para vetor na linha %d\n",contador_linha);
+            printf("Erro semantico: Endereco nao alocado para vetor na linha %d\n",contador_linha);
             total_erros++;
     }
     return FALSE;
@@ -142,7 +142,7 @@ int endereco_acesso_memoria_valido(TabelaDeDiretivas* buscador,short int* indice
     if(!eh_constante(buscador)){
         return endereco_alocado(buscador,indices,ind_arg);
     }else{
-        printf("Tentiva de modificar um valor constante na linha %d\n",contador_linha);
+        printf("Erro semantico: Tentiva de modificar um valor constante na linha %d\n",contador_linha);
         total_erros++;
     }
     return FALSE;
@@ -163,7 +163,7 @@ int endereco_stop_correto(int endereco){
     if(endereco==-2){//flag para indicar que nao foi dado argumento para stop
         return TRUE;
     }else{
-        printf("Instrucao stop com argumentos na linha %d\n",contador_linha);
+        printf("Erro sintatico: Instrucao stop com argumentos na linha %d\n",contador_linha);
         total_erros++;
         return FALSE;
     }
@@ -171,7 +171,7 @@ int endereco_stop_correto(int endereco){
 int divide_zero(TabelaDeDiretivas* buscador){
     if(buscador->tipo=='C'){
         if(buscador->valor==0){
-            printf("\nTentaiva de divisao por 0 na linha %d\n",contador_linha);
+            printf("\nErro semantico: Tentaiva de divisao por 0 na linha %d\n",contador_linha);
             total_erros++;
             return TRUE;
         }
@@ -181,7 +181,7 @@ int divide_zero(TabelaDeDiretivas* buscador){
 int pulo_valido(int endereco_total){
     if(endereco_dados!=-1){
         if(endereco_total >= endereco_dados){
-            printf("\nPulo da linha %d esta acessando area de dados\n",contador_linha);
+            printf("\nErro semantico: Pulo da linha %d esta acessando area de dados\n",contador_linha);
             total_erros++;
             return FALSE;
         }

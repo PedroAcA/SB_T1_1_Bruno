@@ -57,7 +57,7 @@ short int converte_em_num(char* copia_tok,short int numero){
     if(!existe_erro_conversao(str_p_num,copia_tok,aux_erro,errno)){
         numero+= (short int)str_p_num;
     }else{
-        printf("\nErro na contante numerica de vetor na linha %d\n",contador_linha);
+        printf("\nErro sintatico: Erro na contante numerica na linha %d\n",contador_linha);
         numero=-1;
         total_erros++;
     }
@@ -94,16 +94,16 @@ int converte_exp_aritmetica(char* tok,short int* indice_vetor,char *tem_extern){
                 numero = converte_em_num(copia_tok,numero);
                 *indice_vetor = numero-buscador->valor;
             }else{
-                printf("\nErro na formacao do endereco do vetor %s na linha %d \n",tok,contador_linha);
+                printf("\nErro sintatico: Erro na formacao do endereco do vetor %s na linha %d \n",tok,contador_linha);
                 total_erros++;
             }
         }else{
-            printf("\nSimbolo %s nao definido na linha %d\n",copia_tok,contador_linha);
+            printf("\nErro semantico: Simbolo %s nao definido na linha %d\n",copia_tok,contador_linha);
             numero = -1;
             total_erros++;
         }
     }else{
-        printf("\nExpressao %s invalida na linha %d \n",tok,contador_linha);
+        printf("\nErro sintatico: Expressao %s invalida na linha %d \n",tok,contador_linha);
         total_erros++;
     }
     free(inicio_desaloc);

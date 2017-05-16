@@ -39,11 +39,11 @@ int main(int argc, char *argv[]){
 
     if(tem_begin){
         if(!fechou_begin_end){
-            printf("\nArquivo eh modulo, mas nao fechou o begin..end\n");
+            printf("\nErro sintatico: Arquivo eh modulo, mas nao fechou o begin..end\n");
             total_erros++;
         }
     }else if(!tem_stop){
-        printf("\nArquivo nao eh modulo, mas nao tem stop\n");
+        printf("\nErro sintatico: Arquivo nao eh modulo, mas nao tem stop\n");
         total_erros++;
     }
     if(total_erros>0){
