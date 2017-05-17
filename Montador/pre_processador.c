@@ -47,6 +47,9 @@ void remove_desnecessarios (FILE * arq){
 
     while((c = fgetc(arq)) != EOF){//ENQUANTO NAO ATINGE O FINAL DO ARQUIVO, LE CARACTERE POR CARACTERE
         if (c!= ';'){ //SE NAO FOR COMENTARIO
+            if(c == '\t'){ //REMOVE AS TABULAÇÕES
+                c = ' ';
+            }
             if(c != ' ' || anterior != ' '){ //SE NAO FOR ESPACOS DUPLICADOS
                 c = tolower(c); //PASSA O CARACTERE PARA MINUSCULO
                 fprintf(pre,"%c",c);
@@ -141,7 +144,7 @@ void analisa_equivalencias(FILE* arq, TabelaEQU* tabela){
         if(( c=fgetc(arq) ) == '\n'){ //SE A LINHA FOR VAZIA, COPIA ELA NO ARQUIVO
             fprintf(arq2,"\n");
         }
-        else if(c!=EOF){// SE A LINHA TIVER CODIGO
+        else if(c!=EOF && c!= 13){// SE A LINHA TIVER CODIGO
             fseek(arq,ftell(arq)-sizeof(char),SEEK_SET);
             fscanf(arq,"%s",token); //PEGA UMA PALAVRA
             c= fgetc(arq);// PEGA O ESPAÇO OU \N SUBSEQUENTE
