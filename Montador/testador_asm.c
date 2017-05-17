@@ -36,8 +36,9 @@ int main (){
         strcpy(diretorio_completo,"arquivos_teste_moodle");
         strcat(diretorio_completo,"/");
         strcat(diretorio_completo,in_file->d_name);
-        strcpy(comando_completo,"gedit ");
+        strcpy(comando_completo,"./montador -o ");
         strcat(comando_completo,diretorio_completo);
+        strcat(comando_completo," teste");
         printf("\nArquivo encontrado (incluindo diretorio): %s\n",diretorio_completo);
         system(comando_completo);
         getchar();

@@ -20,8 +20,8 @@ int main(int argc, char *argv[]){
             cria_arq_obj();
             verifica_linhas(arq);
             fclose(arq);
-            if(!arg_contem_extensao(argv[2],".pre"))
-                remove(nome_pre);
+//            if(!arg_contem_extensao(argv[2],".pre"))
+                //remove(nome_pre);
 
 
             if(tem_begin){

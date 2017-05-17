@@ -1,0 +1,45 @@
+declaracao_ausente.asm: aparentemente correto
+
+token_inalido.asm: Não detectou caracteres invalidos nas linhas: 5,6,11 nem 16 e contabilizou o total de erros errado (apareceu Total de erros: 0)
+
+fat_mod_b.asm: Não possui section text, e isso não foi detectado (falar com Bruno, pois é um arquivo que ele disponibilizou)
+
+sessao_invalida.asm: aparentemente correto
+
+instrucao_sessao_errada.asm: Não detectou instrução na seção de dados na linha 20
+
+qtd_operandos_invalida.asm: aparentemente correto
+
+dois_rotulos.asm: aparentemente correto
+
+tipo_invalido.asm: Apareceu símbolo não definido nas linhas 12 e 16, quando era pra aparecer erro de tipo (Está teoricamente correto, mas talvez o Bruno não veja dessa forma). Além disso ele mostrou um erro nessas mesmas linhas: "Endereco nao reservado como constante ou espaco na linha"
+
+begin_sem_end.asm: Aparentemente houve um erro no pre processamento
+
+end_sem_begin.asm: Não detectou a falta do begin, mesmo tendo end na linha 14
+
+fat_mod_a.asm: Não possui section text, e isso não foi detectado (falar com Bruno, pois é um arquivo que ele disponibilizou)
+
+declaracao_repetida.asm: aparentemente correto
+
+memoria_nao_reservada: aparentemente correto
+
+no_stop.asm: aparentemente correto
+
+section_text_faltante.asm: Não encontrou o erro
+
+diretiva_sessao_errada.asm aparentemente correto
+
+bin.asm: aparentemente correto
+
+triangulo.asm: Deu tudo errado, provavelmente por conta das tabulacoes
+
+instrucao_invalida.asm: aparentemente correto
+
+pulo_rotulo_invalido.asm: aparentemente correto
+
+diretiva_invalida.asm: aparentemente correto, embora a mensagem mostre "operacao" em vez de "diretiva"
+
+divisao_zero.asm: aparentemente correto
+
+modificacao_constante.asm: aparentemente correto
