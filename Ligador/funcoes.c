@@ -2,12 +2,10 @@
 
 void liga(FILE* arq, FILE* arq2, FILE* arq3,char* nome_arq){
 	
-	char c;
-	char nome[50];
-	int valor, fc2, fc3, erros = 0;
-	Tabela *TabelaUso1 = NULL, *TabelaUso2=NULL, *TabelaDefinicoes1=NULL, *TabelaDefinicoes2 = NULL, *TabelaUso3=NULL, *TabelaDefinicoes3=NULL, *TabelaGlobal = NULL,*p;
-	Relocacao* TabelaRelocacao1 = NULL, *TabelaRelocacao2 = NULL, *TabelaRelocacao3 = NULL,*r;
-	Codigo* Codigo1 = NULL, *Codigo2 = NULL, *Codigo3 = NULL, *q;
+	int fc2, fc3;
+	Tabela *TabelaUso1 = NULL, *TabelaUso2=NULL, *TabelaDefinicoes1=NULL, *TabelaDefinicoes2 = NULL, *TabelaUso3=NULL, *TabelaDefinicoes3=NULL, *TabelaGlobal = NULL;
+	Relocacao* TabelaRelocacao1 = NULL, *TabelaRelocacao2 = NULL, *TabelaRelocacao3 = NULL;
+	Codigo* Codigo1 = NULL, *Codigo2 = NULL, *Codigo3 = NULL;
 
 	//COLOCA TODAS AS INFORMACOES DO PRIMEIRO ARQUIVO OBJETO EM MEMORIA
 	Codigo1 = CriaCodigo (Codigo1, arq);
@@ -105,7 +103,6 @@ Codigo* InsereCodigo (Codigo* tabela, int byte, int info ){ //INSERE UMA INFORMA
 Tabela* CriaUso (Tabela* TabelaUso, FILE* arq){ //CRIA A TABELA DE USOS A PARTIR DE UM ARQUIVO
 	char nome[50];
 	int valor;
-	Tabela *p;
 
 	fgets(nome,50,arq); //PEGA O TRECHO TABLE USE
 
@@ -128,7 +125,6 @@ Tabela* CriaUso (Tabela* TabelaUso, FILE* arq){ //CRIA A TABELA DE USOS A PARTIR
 Tabela* CriaDefinicoes (Tabela* TabelaDefinicoes, FILE* arq){ //CRIA A TABELA DE DEFINICOES A PARTIR DE UM ARQUIVO
 	char nome[50];
 	int valor;
-	Tabela *p;
 
 	fscanf(arq,"%s",nome);
 	while (strcmp(nome,"TABLE") != 0){
@@ -150,7 +146,6 @@ Tabela* CriaDefinicoes (Tabela* TabelaDefinicoes, FILE* arq){ //CRIA A TABELA DE
 
 Relocacao* CriaRelocacao (Relocacao* TabelaRelocacao, FILE* arq){ //CRIA A TABELA DE RELOCACAO A PARTIR DE UM ARQUIVO
 	int valor;
-	Relocacao *p;
 
 	while(!feof(arq)){
 		fscanf(arq,"%d",&valor);			
@@ -168,7 +163,6 @@ Relocacao* CriaRelocacao (Relocacao* TabelaRelocacao, FILE* arq){ //CRIA A TABEL
 Codigo* CriaCodigo(Codigo* codigo, FILE* arq){ //CRIA UMA TABELA COM O CODIGO A PARTIR DE UM ARQUIVO
 	int valor, byte=0;
 	char nome[50],c;
-	Codigo* p;
 
 	fgets(nome,50,arq);//PEGA O CODE
 

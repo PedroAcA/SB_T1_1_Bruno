@@ -63,10 +63,12 @@ void remove_desnecessarios (FILE * arq){
 
 TabelaEQU* cria_lista(FILE* arq, TabelaEQU* tabela){
     char linha[150], token[50], token2[50];
-    char* retorno_fgets;
+    char* a = NULL;
     while(!feof(arq)){ //ENQUANTO NAO ATINGE O FINAL DO ARQUIVO
-        retorno_fgets = fgets(linha,100,arq); //LE LINHA POR LINHA
+        a = fgets(linha,100,arq); //LE LINHA POR LINHA
 //        printf("linha lida: %s",linha);
+
+        a++;
 
         if(strcmp(linha,"section text\n") ==0) //ATE ENCONTRAR SECTION TEXT
             break;
