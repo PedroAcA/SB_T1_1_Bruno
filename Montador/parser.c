@@ -90,6 +90,10 @@ int existe_instrucao(char *tok){
     short int endereco_args[2],indice_vetor[2];//endereco_args= lista dos enderecos de memoria dos argumentos presentes na linha analisada
     if(instrucao_atual!=NULL){//OBS: adicionar funcionalidades de segunda passagem depois
         if(passagem==2){
+            if(endereco_dados!=-1 && ( (contador_posicao - instrucao_atual->tamanho)>= endereco_dados ) ){// existe secao de dados e ha instrucao na area de dados
+                printf("\nInstrucao %s na secao de dados na linha %d\n",instrucao_atual->mnemonico,contador_linha);
+                total_erros++;
+            }
             tok = prox_token();
             converte_em_enderecos(tok,instrucao_atual,indice_vetor,endereco_args);
             if(!existe_token(prox_token())){
@@ -198,11 +202,13 @@ void avalia_argumentos_section(char* tok){
     if(strcmp(tok,"data")==0){//secao de dados
             endereco_dados = contador_posicao;// manter o endereco inical da secao de dados possibilita saber se ha pulos
                                               //para secao indevida
+        qte_data++;
     }else if(strcmp(tok,"text")==0){//section text declarada no meio do codigo assembly
         if(contador_posicao!=0){
             printf("\nErro sintatico: Diretiva section text declarada em lugar invalido na linha %d\n",contador_linha);
             total_erros++;
         }
+        qte_text++;
     }else{// a diretiva eh section, mas os argumentos nao sao data ou text
             printf("\nErro sintatico: Argumentos da diretiva section invalidos na linha %d (diretiva section aceita somente text ou data como argumentos)\n",contador_linha);
             total_erros++;
