@@ -77,7 +77,7 @@ void cria_arq_obj(){
 }
 void exclui_arq_obj(){
     if(obj!=NULL){
-        remove("teste1.o");
+        remove(nome_obj);
     }
 }
 void escreve_instrucao(TabelaDeInstrucoes *instrucao_atual,short int* args){

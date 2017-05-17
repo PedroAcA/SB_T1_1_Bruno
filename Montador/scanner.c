@@ -84,6 +84,7 @@ int converte_exp_aritmetica(char* tok,short int* indice_vetor,char *tem_extern){
     if(existe_token(copia_tok)){//inicio da avaliacao do rotulo
             buscador = busca_simbolo(TS,copia_tok);
         if(buscador!=NULL){
+            variavel_bem_formada(tok);
             if(buscador->externo == 's'){
                 *tem_extern='T';
                 TU = Insere_var_externa(TU,buscador->nome);
@@ -108,4 +109,20 @@ int converte_exp_aritmetica(char* tok,short int* indice_vetor,char *tem_extern){
     }
     free(inicio_desaloc);
     return numero;
+}
+int variavel_bem_formada(char *var){
+    int ret = FALSE;
+    if(tam_string(var)>51){// 50 caracteres de nome de variavel + 1 para ':'
+        printf("\nErro lexico: Variavel %s com mais de 50 caracteres na linha %d\n",var,contador_linha);
+        total_erros++;
+    }else if(strpbrk(var,"';!@#$%&*()-+={[}]?/°>.<,|\\  */")!=NULL){//ha um caracter invaliido
+        printf("\nErro lexico: Caracteres invalidos na variavel %s presente na linha %d\n",var,contador_linha);
+        total_erros++;
+    }else if(eh_numero(var[0])){
+            printf("\nErro lexico: Variavel %s mal formada na linha %d (Variavel nao pode comecar com numero)\n",var,contador_linha);
+            total_erros++;
+    }else{
+        ret = TRUE;
+    }
+    return ret;
 }

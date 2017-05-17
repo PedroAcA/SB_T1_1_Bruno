@@ -39,7 +39,8 @@ int main (){
         strcpy(comando_completo,"./montador -o ");
         strcat(comando_completo,diretorio_completo);
         strcat(comando_completo," teste");
-        printf("\nArquivo encontrado (incluindo diretorio): %s\n",diretorio_completo);
+       // printf("\nArquivo encontrado (incluindo diretorio): %s\n",diretorio_completo);
+	printf("\nComando executado:%s\n",comando_completo);
         system(comando_completo);
         getchar();
         getchar();

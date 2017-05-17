@@ -35,6 +35,7 @@ int extrai_endereco(char* tok,short int* indice_vetor){// vai pegar uma label ou
     }else{
         buscador = busca_simbolo(TS,tok);
         if(buscador!=NULL){
+            variavel_bem_formada(tok);
             endereco = buscador->valor;
             if(buscador->externo == 's'){
                 ha_externo[indice_externo]='T';

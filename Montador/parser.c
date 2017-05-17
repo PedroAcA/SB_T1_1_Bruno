@@ -57,18 +57,7 @@ int existe_rotulo(char * tok){
    // printf("Ultimo caracter de %s %c, cujo tamanho eh: %d",tok,tok[ultimo_caract],sizeof(tok));
     if(tok[ultimo_caract] == ':'){// ultimo caracter valido do token eh : e primeiro nao eh numero sao os requisitos
         if(passagem==1){// so precisa avaliar o rotulo em uma passagem so
-            if(tam_string(tok)>51){// 50 caracteres de nome de variavel + 1 para ':'
-                printf("\nErro lexico: Rotulo %s com mais de 50 caracteres\n",tok);
-                total_erros++;
-            }else if(strpbrk(tok,"';!@#$%&*()-+={[}]?/°>.<,|\\  */")!=NULL){//ha um caracter invaliido
-                printf("\nErro lexico: Caracteres invalidos no rotulo presente na linha %d\n",contador_linha);
-            }else{
-            //   printf("Analisando rotulos\n");
-                if(eh_numero(tok[0])){
-                    printf("\nErro lexico: Rotulo %s mal formado na linha %d (rotulo nao pode comecar com numero)\n",tok,contador_linha);
-                    total_erros++;
-                }
-            }
+            variavel_bem_formada(tok);
         }
         return TRUE;
     }
@@ -195,6 +184,7 @@ int existe_diretiva(char *tok){
         }
         return TRUE;
     }else if(strcmp(tok,"end")==0 && passagem==1){
+        tem_begin = TRUE;
         fechou_begin_end = !fechou_begin_end;
         return TRUE;
     }
