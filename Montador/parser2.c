@@ -110,8 +110,8 @@ int enderecos_sem_erros(char *nome_instr,short int* enderecos,short int*indices)
             }else{
                 return endereco_alocado(buscador,indices,0);
             }
-        }else if(busca_simbolo_por_posicao_memoria(TS,end_base[0])!=NULL){//soluca brian
-            printf("\nErro semantico: Endereco nao reservado como constante ou espaco na linha %d\n",contador_linha);
+        }else if(busca_simbolo_por_posicao_memoria(TS,end_base[0])!=NULL){ //o rotulo pode ter sido definido, mas nao como espaco ou constante
+            printf("\nErro semantico: Endereco do rotulo nao reservado como constante ou espaco na linha %d\n",contador_linha);
             total_erros++;
         }
     }
