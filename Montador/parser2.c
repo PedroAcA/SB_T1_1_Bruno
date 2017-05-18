@@ -16,7 +16,7 @@ void converte_em_enderecos(char *tok,TabelaDeInstrucoes* instrucao_atual,short i
         if(existe_token(tok))
             processa_argumentos_copy(tok,indice_vetor,args);
         else{
-            printf("\nInstrucao copy sem argumentos na linha %d\n",contador_linha);
+            printf("\nErro sintatico: Instrucao copy sem argumentos na linha %d\n",contador_linha);
             args[0] = -1;
             args[0] = -1;
             indice_vetor[0] = 0;
@@ -34,7 +34,7 @@ void converte_em_enderecos(char *tok,TabelaDeInstrucoes* instrucao_atual,short i
           args[0] = -2;// entao colocamos -2 na posicao 0 de args para indicar stop com argumentos corretos
           indice_vetor[0] = 0;
     }else{
-        printf("\nInstrucao %s  sem argumentos na linha %d\n",instrucao_atual->mnemonico,contador_linha);
+        printf("\nErro Sintatico: Instrucao %s  sem argumentos na linha %d\n",instrucao_atual->mnemonico,contador_linha);
         total_erros++;
     }
 }
