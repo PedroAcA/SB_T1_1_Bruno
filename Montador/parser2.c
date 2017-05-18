@@ -71,6 +71,11 @@ void processa_argumentos_copy(char* tok,short int* indice_vetor,short int* args)
             Insere_pos_uso(TU,(contador_posicao-2+(tam-1)) );
             copia_tok = strtok_r(NULL," ",&end_tok);
         }
+
+        while(existe_token(copia_tok) && strchr(copia_tok,',')!=NULL){
+            copia_tok = elimina_caracter(copia_tok,",");
+            tam+=2;// += a 2 eh pq se ele entrara neste laco, significa q ele avaliou somente o primeiro argumento. Se entrar neste laco, tem mais argumentos q o que a copy requer (numero de argumentos a a mais n eh inportante)
+        }
         erros_num_args_copy(tam);
     }else{
         printf("\nErro sintatico: Formato dos argumentos de copy incorreto na linha %d\n",contador_linha);
