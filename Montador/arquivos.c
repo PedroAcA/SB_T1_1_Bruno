@@ -41,7 +41,6 @@ void analisa_args_linha_comando(int n_arg,char **args ){
         printf("\nNumero de argumentos diferente do esperado.\nPor favor, tente novamente inserindo nome do programa + 3 argumentos\n");
         exit(-3);
     }
-//    printf("\nASM:%sPRE:%sOBJ: %s\n\n",nome_asm,nome_pre,nome_obj);
 }
 FILE *abre_arq_pre(){
     if(nome_pre!=NULL)

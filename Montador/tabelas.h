@@ -48,7 +48,7 @@ void* CriaTabela (void);
 TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos*, char*,short int);
 void InsereSimbolo_Externo (TabelaDeSimbolos*);
 TabelaDeSimbolos* busca_simbolo(TabelaDeSimbolos*,char*);
-
+TabelaDeSimbolos* busca_simbolo_por_posicao_memoria(TabelaDeSimbolos*,short int);
 
 TabelaDeInstrucoes* inicializa_instrucoes(void);
 TabelaDeInstrucoes* InsereInstrucao(TabelaDeInstrucoes*,char*,short int,short int);

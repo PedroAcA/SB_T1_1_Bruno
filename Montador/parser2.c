@@ -110,10 +110,10 @@ int enderecos_sem_erros(char *nome_instr,short int* enderecos,short int*indices)
             }else{
                 return endereco_alocado(buscador,indices,0);
             }
-        }/*else{
-            printf("Erro semantico: Endereco nao reservado como constante ou espaco na linha %d\n",contador_linha);
+        }else if(busca_simbolo_por_posicao_memoria(TS,end_base[0])!=NULL){//soluca brian
+            printf("\nErro semantico: Endereco nao reservado como constante ou espaco na linha %d\n",contador_linha);
             total_erros++;
-        }*/
+        }
     }
     return FALSE;
 }

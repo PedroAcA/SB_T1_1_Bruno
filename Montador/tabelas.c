@@ -1,7 +1,4 @@
 #include"bibliotecas_montador.h"
-//TabelaDeObjetos *Inicio=NULL,*Fim=NULL;// ponteiros internos para criar a fila de codigo objeto
-                             // assim, é possivel escrever as tabelas e o codigo
-                             // objeto na ordem em que aparecem
 void * CriaTabela(){
     return NULL;
 }
@@ -19,19 +16,23 @@ TabelaDeSimbolos* InsereSimbolo (TabelaDeSimbolos* tabela, char nome[],short int
 /*Como simbolo externo sempre deve vir apos rotulo, entao se ha extern
 o inicio da tabela de simbolos eh o rotulo atual a ser inserido como extern*/
 void InsereSimbolo_Externo (TabelaDeSimbolos* tabela){
-  //  TabelaDeSimbolos * novo = (TabelaDeSimbolos*) calloc(1,sizeof(TabelaDeSimbolos));
-  //  strcpy(novo->nome, nome);
     tabela->valor = 0;
-    //novo->prox = tabela;
     tabela->externo = 's';
-   // tabela = novo;
-   // return novo;
 }
 TabelaDeSimbolos* busca_simbolo(TabelaDeSimbolos* tabela,char* simb){
     while(tabela!=NULL){
         if(strcmp(tabela->nome,simb)==0){//achou simbolo na tabela de simbolos
             return tabela;
         }
+        tabela = tabela->prox;
+    }
+    return NULL;
+}
+TabelaDeSimbolos* busca_simbolo_por_posicao_memoria(TabelaDeSimbolos* tabela, short int endereco){
+    while(tabela!=NULL){
+        if(tabela->valor == endereco)
+            return tabela;
+
         tabela = tabela->prox;
     }
     return NULL;
@@ -89,7 +90,6 @@ TabelaDeInstrucoes* busca_incrementa_posicao(char*tok){
     }
     return buscador;
 }
-
 TabelaDeDiretivas* insereDiretiva(TabelaDeDiretivas* Dir,int posicao_memoria,char tipo,int valor){
     TabelaDeDiretivas* novo = (TabelaDeDiretivas*)malloc(sizeof(TabelaDeDiretivas));
     if(novo==NULL){
@@ -132,7 +132,6 @@ void Insere_pos_uso(TabelaDeUso* TabUso,short int pos_uso){
     if(TabUso!=NULL)
         TabUso->valor = pos_uso;
 }
-
 TabelaDeDefinicoes* Insere_Simbolo_publico(TabelaDeDefinicoes* TabDef, char* nome){
     TabelaDeDefinicoes* novo = (TabelaDeDefinicoes*)malloc(sizeof(TabelaDeDefinicoes));
     if(novo==NULL){
@@ -144,7 +143,6 @@ TabelaDeDefinicoes* Insere_Simbolo_publico(TabelaDeDefinicoes* TabDef, char* nom
     }
     return novo;
 }
-
 void transfere_da_TS_para_TabelaDefinicoes(TabelaDeSimbolos* TabelaSimbolos, TabelaDeDefinicoes* TabelaDefinicoes){
     TabelaDeSimbolos *Simbolo_correspondente;
     while(TabelaDefinicoes!=NULL){
@@ -198,56 +196,3 @@ void libera_tabela_diretivas(TabelaDeDiretivas* d){
         d = aux;
     }
 }
-/*
-void Insere_Codigo_Objeto_Instr(TabelaDeInstrucoes* instrucao,short int* args){
-    TabelaDeObjetos* novo = (TabelaDeObjetos*)malloc(sizeof(TabelaDeObjetos));
-    if(novo!=NULL){
-        novo->tipo = 'I';
-        novo->prox=NULL;
-        novo->valor = instrucao->opcode;
-        if(strcmp(instrucao->mnemonico,"copy")==0){
-            novo->op1 = args[0];
-            novo->op2 = args[1];
-        }else if(strcmp(instrucao->mnemonico,"stop")!=0){// instrucao a ser salva nao eh stop
-            novo->op1 = args[0];
-        }
-        if(Inicio==NULL){
-            Inicio = novo;
-            Fim = novo;
-        }else{
-            Fim->prox = novo;
-            Fim = novo;
-        }
-    }else{
-        printf("Sistema Operacional nao conseguiu reservar espaco de memoria\n");
-        exit(-1);
-    }
-}
-
-void Insere_Codigo_Objeto_Dir(char tipo,short int valor){
-    TabelaDeObjetos* novo = (TabelaDeObjetos*)malloc(sizeof(TabelaDeObjetos));
-    if(novo!=NULL){
-        novo->tipo = tipo;
-        novo->prox=NULL;
-        novo->valor = valor;
-        if(Inicio==NULL){
-            Inicio = novo;
-            Fim = novo;
-        }else{
-            Fim->prox = novo;
-            Fim = novo;
-        }
-    }else{
-        printf("Sistema Operacional nao conseguiu reservar espaco de memoria\n");
-        exit(-1);
-    }
-}
-void desaloca_Tabela_Objetos(){
-    TabelaDeObjetos* aux
-    while(Inicio!=NULL){
-        aux = Inicio->prox;
-        free(Inicio);
-        Inicio=aux;
-    }
-}
-*/
