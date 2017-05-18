@@ -13,8 +13,16 @@ void converte_em_enderecos(char *tok,TabelaDeInstrucoes* instrucao_atual,short i
     ha_externo[0] = 'F';
     ha_externo[1] = 'F';
     if(strcmp(instrucao_atual->mnemonico,"copy")==0){
-        processa_argumentos_copy(tok,indice_vetor,args);
-      //  tok = prox_token();
+        if(existe_token(tok))
+            processa_argumentos_copy(tok,indice_vetor,args);
+        else{
+            printf("\nInstrucao copy sem argumentos na linha %d\n",contador_linha);
+            args[0] = -1;
+            args[0] = -1;
+            indice_vetor[0] = 0;
+            indice_vetor[1] = 0;
+            total_erros++;
+        }
     }else if(existe_token(tok)){
         indice_realocacao[tamanho_realoc-1] = contador_posicao-1;
         tamanho_realoc++;
@@ -25,6 +33,9 @@ void converte_em_enderecos(char *tok,TabelaDeInstrucoes* instrucao_atual,short i
     }else if(strcmp(instrucao_atual->mnemonico,"stop")==0){//nao ha argumentos e a instrucao eh stop
           args[0] = -2;// entao colocamos -2 na posicao 0 de args para indicar stop com argumentos corretos
           indice_vetor[0] = 0;
+    }else{
+        printf("\nInstrucao %s  sem argumentos na linha %d\n",instrucao_atual->mnemonico,contador_linha);
+        total_erros++;
     }
 }
 int extrai_endereco(char* tok,short int* indice_vetor){// vai pegar uma label ou label+ numero e retornar o endereco resultante
