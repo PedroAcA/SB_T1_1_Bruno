@@ -14,7 +14,7 @@ void converte_em_enderecos(char *tok,TabelaDeInstrucoes* instrucao_atual,short i
     ha_externo[1] = 'F';
     if(strcmp(instrucao_atual->mnemonico,"copy")==0){
         processa_argumentos_copy(tok,indice_vetor,args);
-        tok = prox_token();
+      //  tok = prox_token();
     }else if(existe_token(tok)){
         indice_realocacao[tamanho_realoc-1] = contador_posicao-1;
         tamanho_realoc++;
@@ -58,7 +58,7 @@ void processa_argumentos_copy(char* tok,short int* indice_vetor,short int* args)
     strcpy(copia_tok,tok);
     inicio_desaloc =  copia_tok;
     if(strchr(copia_tok,',')!=NULL){
-        copia_tok = elimina_caracter(tok,",");// testar para ve se strok funciona apos essa sepacacao
+        copia_tok = elimina_caracter(copia_tok,",");// testar para ve se strok funciona apos essa sepacacao
         copia_tok = strtok_r(copia_tok," ",&end_tok);
         while(existe_token(copia_tok) && (strchr(copia_tok,',')==NULL) ){// pra copy ser valido so pode ter uma virgula no espaco dos argumentos
             tam++;
@@ -84,11 +84,8 @@ void processa_argumentos_copy(char* tok,short int* indice_vetor,short int* args)
     free(inicio_desaloc);
 }
 void erros_num_args_copy(short int n_args){
-    if(n_args <2){//gera o numero de argumentos lidos para copy
-        printf("\nErro sintatico: Numero de argumentos menor do que o esperado para copy na linha %d\n",contador_linha);
-        total_erros++;
-    }else if(n_args>2){
-        printf("\nErro sintatico: Numero de argumentos maior do que o esperado para copy na linha %d\n",contador_linha);
+    if(n_args!=2){
+        printf("\nErro sintatico: Numero incorreto de argumentos do tipo (A,B) para copy na linha %d\n",contador_linha);
         total_erros++;
     }
 }

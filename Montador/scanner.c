@@ -16,7 +16,6 @@ char* divide_tokens(char *linha){
 // funcao prox_token espera que a palavra ja tenha sido dividida em tokens!
 char* prox_token(){
     return strtok(NULL," ");
-
 }
 /*tam_string retorna o numero de elementos em uma string*/
 int tam_string(char* str){

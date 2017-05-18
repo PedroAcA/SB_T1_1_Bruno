@@ -95,8 +95,12 @@ int existe_instrucao(char *tok){
                 total_erros++;
             }
             tok = prox_token();
+           // printf("\nToken:%s\n",tok);
             converte_em_enderecos(tok,instrucao_atual,indice_vetor,endereco_args);
-            if(!existe_token(prox_token())){
+          //  printf("\nToken:%s\n",tok);
+            tok = prox_token();
+          //  printf("\nProximo Token:%s\n",tok);
+            if(!existe_token(tok)){
                 if(!existe_argumento_externo()){
                     if(enderecos_sem_erros(instrucao_atual->mnemonico,endereco_args,indice_vetor)){
                         escreve_instrucao(instrucao_atual,endereco_args);
@@ -106,7 +110,7 @@ int existe_instrucao(char *tok){
                         escreve_instrucao(instrucao_atual,endereco_args);
                 }
             }else{
-                    printf("Erro sintatico: Numero incorreto de argumentos para a instrucao %s na linha %d\n",instrucao_atual->mnemonico,contador_linha);
+                    printf("Erro sintatico: Numero argumentos maior que o esperado para a instrucao %s na linha %d\n",instrucao_atual->mnemonico,contador_linha);
                     total_erros++;
             }
         }
