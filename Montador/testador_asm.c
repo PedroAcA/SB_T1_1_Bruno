@@ -19,8 +19,8 @@ int main (){
     struct dirent* in_file;
     FILE    *common_file;
     FILE    *entry_file;
-    char    diretorio_completo[10000],comando_completo[10000];
-    FD = opendir ("arquivos_teste_moodle");
+    char    diretorio_completo[10000],comando_completo[10000],diretorio_destino[10000];
+    FD = opendir ("arquivos_teste_objeto");
     if(FD!=NULL){
          while ((in_file = readdir(FD)))
     {
@@ -33,14 +33,17 @@ int main (){
             continue;
         /* Open directory entry file for common operation */
         /* TODO : change permissions to meet your need! */
-        strcpy(diretorio_completo,"arquivos_teste_moodle");
+        strcpy(diretorio_completo,"arquivos_teste_objeto");
         strcat(diretorio_completo,"/");
         strcat(diretorio_completo,in_file->d_name);
         strcpy(comando_completo,"./montador -o ");
         strcat(comando_completo,diretorio_completo);
-        strcat(comando_completo," teste");
+        strcpy(diretorio_destino," arquivos_teste_objeto/");
+        in_file->d_name[strlen(in_file->d_name)-4] = '\0';
+        strcat(diretorio_destino,in_file->d_name);;
+        strcat(comando_completo,diretorio_destino);
        // printf("\nArquivo encontrado (incluindo diretorio): %s\n",diretorio_completo);
-	printf("\nComando executado:%s\n",comando_completo);
+	    printf("\nComando executado:%s\n",comando_completo);
         system(comando_completo);
         getchar();
         getchar();
