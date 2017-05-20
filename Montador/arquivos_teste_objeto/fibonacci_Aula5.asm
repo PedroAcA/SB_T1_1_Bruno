@@ -1,6 +1,6 @@
 section text
 copy zero,older
-copy older,old
+copy one,old
 input limit
 output old
 front: load older

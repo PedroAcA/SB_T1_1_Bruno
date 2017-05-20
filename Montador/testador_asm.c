@@ -38,7 +38,7 @@ int main (){
         strcat(diretorio_completo,in_file->d_name);
         strcpy(comando_completo,"./montador -o ");
         strcat(comando_completo,diretorio_completo);
-        strcpy(diretorio_destino," arquivos_teste_objeto/");
+        strcpy(diretorio_destino," arquivos_teste_objeto/objetos/");
         in_file->d_name[strlen(in_file->d_name)-4] = '\0';
         strcat(diretorio_destino,in_file->d_name);;
         strcat(comando_completo,diretorio_destino);
