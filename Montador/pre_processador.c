@@ -11,7 +11,8 @@ void pre_processa(char nome_arq[]){
         remove_desnecessarios(arq);
         fclose(arq);
     }else{
-        printf("Arquivo %s n%co encontrado!",nome_arq,198);
+        printf("Arquivo %s nao encontrado!\n",nome_arq);
+        exit(1);
     }
 
     //ANALISA A DIRETIVA EQU, GERA UMA LISTA DE EQUIVALENCIAS E SUBSTITUI AS EQUIVALENCIAS
@@ -22,7 +23,7 @@ void pre_processa(char nome_arq[]){
         analisa_equivalencias(arq,tabela); //SUBSTITUI TODOS OS NOMES POR SEUS EQUIVALENTES
         fclose(arq);
     }else{
-        printf("Arquivo temp1.pre n%co encontrado!",198);
+        printf("Arquivo temp1.pre nao encontrado!");
     }
 
     //REMOVE OS IF'S E EQU'S DO CODIGO
@@ -31,7 +32,7 @@ void pre_processa(char nome_arq[]){
         remove_diretivas(arq);
         fclose(arq);
     }else{
-        printf("Arquivo temp2.pre n%co encontrado!",198);
+        printf("Arquivo temp2.pre naco encontrado!");
     }
 
     remove(nome_pre);
