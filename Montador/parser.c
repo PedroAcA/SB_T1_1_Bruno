@@ -91,7 +91,7 @@ int existe_instrucao(char *tok){
     if(instrucao_atual!=NULL){//OBS: adicionar funcionalidades de segunda passagem depois
         if(passagem==2){
             if(endereco_dados!=-1 && ( (contador_posicao - instrucao_atual->tamanho)>= endereco_dados ) ){// existe secao de dados e ha instrucao na area de dados
-                printf("\nInstrucao %s na secao de dados na linha %d\n",instrucao_atual->mnemonico,contador_linha);
+                printf("\nErro semantico: Instrucao %s na secao de dados na linha %d\n",instrucao_atual->mnemonico,contador_linha);
                 total_erros++;
             }
             tok = prox_token();

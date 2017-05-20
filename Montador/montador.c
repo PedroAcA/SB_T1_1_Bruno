@@ -23,14 +23,14 @@ int main(int argc, char *argv[]){
             if(!arg_contem_extensao(argv[2],".pre"))
                 remove(nome_pre);
             if(qte_text==0){
-                printf("\nFalta section text no codigo\n");
+                printf("\nErro semantico: Falta section text no codigo\n");
                 total_erros++;
             }else if(qte_text>1){
-                printf("\nMais de uma section text no codigo\n");
+                printf("\nErro semantico: Mais de uma section text no codigo\n");
                 total_erros++;
             }
             if(qte_data>1){
-                printf("\nMais de uma section data no codigo\n");
+                printf("\nErro semantico: Mais de uma section data no codigo\n");
                 total_erros++;
             }
             if(tem_begin){
