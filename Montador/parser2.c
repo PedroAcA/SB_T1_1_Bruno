@@ -29,7 +29,8 @@ void converte_em_enderecos(char *tok,TabelaDeInstrucoes* instrucao_atual,short i
         indice_realocacao = (short int*) realloc(indice_realocacao,tamanho_realoc*sizeof(short int));
         tam++;
         args[0] = extrai_endereco(tok,indice_vetor);
-        Insere_pos_uso(TU,(contador_posicao-1) );
+        if(ha_externo[0]=='T')
+            Insere_pos_uso(TU,(contador_posicao-1) );
     }else if(strcmp(instrucao_atual->mnemonico,"stop")==0){//nao ha argumentos e a instrucao eh stop
           args[0] = -2;// entao colocamos -2 na posicao 0 de args para indicar stop com argumentos corretos
           indice_vetor[0] = 0;
@@ -79,7 +80,8 @@ void processa_argumentos_copy(char* tok,short int* indice_vetor,short int* args)
             indice_realocacao = (short int*) realloc(indice_realocacao,tamanho_realoc*sizeof(short int));
             indice_externo = tam-1;
             args[tam-1]=extrai_endereco(copia_tok,(indice_vetor+tam-1));
-            Insere_pos_uso(TU,(contador_posicao-2+(tam-1)) );
+            if(ha_externo[(tam-1)]=='T')
+                Insere_pos_uso(TU,(contador_posicao-2+(tam-1)) );
             copia_tok = strtok_r(NULL," ",&end_tok);
         }
 
@@ -150,7 +152,7 @@ int endereco_alocado(TabelaDeDiretivas* buscador,short int* indices,int ind_arg)
     if(memoria_alocada(buscador,indices[ind_arg])){
             return TRUE;
     }else{
-            printf("Erro semantico: Endereco com espacos nao alocado para vetor na linha %d\n",contador_linha);
+            printf("Erro semantico: Endereco nao alocado para vetor na linha %d\n",contador_linha);
             total_erros++;
     }
     return FALSE;
