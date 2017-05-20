@@ -51,6 +51,7 @@ void liga(FILE* arq, FILE* arq2, FILE* arq3,char* nome_arq){
 		//ABRE O ARQUIVO DE SAIDA E IMPRIME O CODIGO
 		FILE* arq4 = fopen(nome_arq,"w");
 		ImprimirCoidgo(Codigo1,Codigo2,Codigo3,arq4);
+		printf("Arquivo ligado com sucesso\n");
 		fclose(arq4);
 
 	}
@@ -301,19 +302,19 @@ Tabela* CriaGlobal (Tabela* TabelaGlobal, Tabela* TabelaDefinicoes1,Tabela* Tabe
 void ImprimirCoidgo(Codigo* Codigo1,Codigo* Codigo2,Codigo* Codigo3,FILE* arq){
 	Codigo *p;
 	for(p = Codigo1; p!=NULL; p=p->prox){
-		printf("Byte: %d: %d\n",p->byte,p->info);
+		//printf("Byte: %d: %d\n",p->byte,p->info);
 		fprintf(arq, "%d ", p->info);
 	}
 
 	for(p = Codigo2; p!=NULL; p=p->prox){
-		printf("Byte: %d: %d\n",p->byte,p->info);
+		//printf("Byte: %d: %d\n",p->byte,p->info);
 		fprintf(arq, "%d", p->info);
 		if(p->prox != NULL || Codigo3 != NULL)
 			fprintf(arq, " ");
 	}
 
 	for(p = Codigo3; p!=NULL; p=p->prox){
-		printf("Byte: %d: %d\n",p->byte,p->info);
+		//printf("Byte: %d: %d\n",p->byte,p->info);
 		fprintf(arq, "%d", p->info);
 		if(p->prox != NULL)
 			fprintf(arq, " ");
