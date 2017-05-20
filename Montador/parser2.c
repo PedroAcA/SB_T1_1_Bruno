@@ -134,7 +134,10 @@ int eh_constante(TabelaDeDiretivas* diretiva_atual){
     return (diretiva_atual->tipo == 'C');
 }
 int memoria_alocada(TabelaDeDiretivas* diretiva_atual,int indice){
-    return indice < diretiva_atual->valor;
+    if(diretiva_atual->tipo=='C')// se foi declarado como constante, endereco esta alocado
+        return (indice==0);
+    else
+        return indice < diretiva_atual->valor;
 }
 int eh_pulo(char *instrucao){
     return (strcmp(instrucao,"jmp")==0 ||strcmp(instrucao,"jmpn")==0
@@ -147,7 +150,7 @@ int endereco_alocado(TabelaDeDiretivas* buscador,short int* indices,int ind_arg)
     if(memoria_alocada(buscador,indices[ind_arg])){
             return TRUE;
     }else{
-            printf("Erro semantico: Endereco nao alocado para vetor na linha %d\n",contador_linha);
+            printf("Erro semantico: Endereco com espacos nao alocado para vetor na linha %d\n",contador_linha);
             total_erros++;
     }
     return FALSE;
